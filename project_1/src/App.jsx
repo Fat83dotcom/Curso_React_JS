@@ -14,6 +14,9 @@ class App extends Component {
             <img src={viteLogo} className="logo" alt="Vite logo" />
           </a>
           <h1>Olá Mundo !!!</h1>
+          <a href="https://react.dev" target="_blank">
+            <img src={reactLogo} className="logo react" alt="React logo" />
+          </a>
         </div>
       </>
     )
