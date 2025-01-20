@@ -2,6 +2,7 @@ import { Component, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { PostCard } from './components/PostcCard'
 
 
 class App extends Component {
@@ -37,13 +38,12 @@ class App extends Component {
       <section className='container'>
         <div className='posts'>
           {posts.map(post => (
-            <div className='post'>
-            <img className='photo' src={post.cover} alt="foto" />
-              <div key={post.id}>
-                <h1>{post.title}</h1>
-                <h2>{post.body}</h2>
-              </div>
-            </div>
+            <PostCard 
+              title={post.title}
+              body={post.body}
+              id={post.id}
+              cover={post.cover}
+            />
           ))}
         </div>
       </section>
