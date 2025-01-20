@@ -44,3 +44,21 @@
 .button-sum {
   text-align: center;
 }
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+.container {
+  min-height: 100vh;
+  background: #eee;
+}
+.post {
+  background: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+.photo{
+  max-width: 100%;
+}
