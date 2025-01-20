@@ -26,16 +26,26 @@ class App extends Component {
     counter: 0,
   }
 
+  timeOutUpdate = null
+
   componentDidMount() {
     this.handleCounter()
+  }
+
+  componentDidUpdate() {
+    this.handleCounter()
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeOutUpdate)
   }
 
   handleCounter = () => {
     const {counter} = this.state
 
-    setTimeout(() => {
+    this.timeOutUpdate = setTimeout(() => {
       this.setState({counter: counter + 1})
-    }, 1000)
+    }, 500)
   }
 
   render() {
