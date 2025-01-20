@@ -6,44 +6,33 @@ import './App.css'
 
 class App extends Component {
   state = {
-    name: 'Fernando Mendes',
-    counter: 0,
+    posts : [
+      {
+        id: 1,
+        title: 'titulo 1',
+        body: 'body 1',
+      },
+      {
+        id: 2,
+        title: 'titulo 2',
+        body: 'body 2',
+      },
+      {
+        id: 3,
+        title: 'titulo 3',
+        body: 'body 3',
+      },
+    ]
   }
 
-  handleSumButton = () => {
-    const {counter} = this.state
-    this.setState({counter: counter + 1})
-  }
-
-  handleResetButton = (event) => {
-    event.preventDefault()
-    this.setState({counter: 0})
-  }
-
-  SumButton = () => {
-    return (
-      <button onClick={this.handleSumButton} className='button-sum'>Adicionar</button>
-    )
-  };
+  
 
   render() {
-    const {name, counter} = this.state // Atribuição via desestruturação
-    
+    const {posts} = this.state
     return (
       <>
         <div>
-          <a href="https://vite.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <h1>Olá Mundo !!!</h1>
-          <div>
-            <this.SumButton/>
-          </div>
-          <h2>{counter}</h2>
-          <h2>{name}</h2>
-          <a onClick={this.handleResetButton} href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
+          {posts.map(post => <h1 key={post.id}>{post.title}</h1>)}
         </div>
       </>
     )
