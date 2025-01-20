@@ -6,95 +6,50 @@ import './App.css'
 
 class App extends Component {
   state = {
-    posts : [
-      {
-        id: 1,
-        title: 'titulo 1',
-        body: 'body 1',
-      },
-      {
-        id: 2,
-        title: 'titulo 2',
-        body: 'body 2',
-      },
-      {
-        id: 3,
-        title: 'titulo 3',
-        body: 'body 3',
-      },
-    ],
-    counter: 0,
+    posts : []
   }
-
-  timeOutUpdate = null
 
   componentDidMount() {
-    this.handleCounter()
+    // fetch('https://jsonplaceholder.typicode.com/posts')
+    //   .then(response => response.json())
+    //   .then(posts => this.setState({posts}))
+    this.loadPosts()
   }
 
-  componentDidUpdate() {
-    this.handleCounter()
-  }
+  loadPosts = async () => {
+    const postResponse = fetch('https://jsonplaceholder.typicode.com/posts')
+    const photoResponse = fetch('https://jsonplaceholder.typicode.com/photos')
+    const [posts, photo] = await Promise.all([postResponse, photoResponse])
+    const postJson = await posts.json()
+    const photoJson = await photo.json()
 
-  componentWillUnmount() {
-    clearTimeout(this.timeOutUpdate)
-  }
+    const postAndPhotos = postJson.map((post, index) => {
+      return {... post, cover: photoJson[index].url}
+    })
 
-  handleCounter = () => {
-    const {counter} = this.state
-
-    this.timeOutUpdate = setTimeout(() => {
-      this.setState({counter: counter + 1})
-    }, 500)
+    this.setState({posts: postAndPhotos})
   }
 
   render() {
-    const {posts, counter} = this.state
+    const {posts} = this.state
     return (
       <>
-        <div>
-          <div>
-            {counter}
-          </div>
+      <section className='container'>
+        <div className='posts'>
           {posts.map(post => (
-            <div key={post.id}>
-              <h1 >{post.title}</h1>
-              <h2>{post.body}</h2>
+            <div className='post'>
+            <img className='photo' src={post.cover} alt="foto" />
+              <div key={post.id}>
+                <h1>{post.title}</h1>
+                <h2>{post.body}</h2>
+              </div>
             </div>
           ))}
         </div>
+      </section>
       </>
     )
   }
 }
-
-{/* // function App() { */}
-{/* //   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// } */}
 
 export default App
