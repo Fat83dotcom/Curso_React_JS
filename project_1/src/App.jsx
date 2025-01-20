@@ -22,16 +22,30 @@ class App extends Component {
         title: 'titulo 3',
         body: 'body 3',
       },
-    ]
+    ],
+    counter: 0,
   }
 
-  
+  componentDidMount() {
+    this.handleCounter()
+  }
+
+  handleCounter = () => {
+    const {counter} = this.state
+
+    setTimeout(() => {
+      this.setState({counter: counter + 1})
+    }, 1000)
+  }
 
   render() {
-    const {posts} = this.state
+    const {posts, counter} = this.state
     return (
       <>
         <div>
+          <div>
+            {counter}
+          </div>
           {posts.map(post => (
             <div key={post.id}>
               <h1 >{post.title}</h1>
