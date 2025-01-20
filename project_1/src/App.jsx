@@ -5,13 +5,9 @@ import './App.css'
 
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    // this.handleSumButton = this.handleSumButton.bind(this)
-    this.state = {
-      name: 'Fernando Mendes',
-      counter: 0,
-    }
+  state = {
+    name: 'Fernando Mendes',
+    counter: 0,
   }
 
   handleSumButton = () => {
