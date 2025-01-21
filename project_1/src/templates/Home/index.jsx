@@ -70,13 +70,12 @@ class Home extends Component {
               body={post.body}
             />
           ))}
-          </div>) : <p>Não há posts com essas palavras.</p>
+          </div>) : <h3>Não há posts com essas palavras.</h3>
         }
         {!searchValue && (<ButtonLoadMore 
         loadMore={this.loadMorePost}
         setDisable={noMorePosts}
         />)}
-        
       </section>
       </>
     )
