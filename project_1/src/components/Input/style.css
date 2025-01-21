@@ -1,0 +1,9 @@
+.search-style {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.search-input-style {
+    width: 100%;
+    padding: 10px;
+}
