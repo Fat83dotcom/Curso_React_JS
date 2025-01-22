@@ -18,36 +18,27 @@ export const Home = () => {
     return post.title.toLowerCase().includes(searchValue.toLowerCase())
   }) : posts
 
-  const loadPosts = async () => {
-    const {page, postsPerPage} = this.state
-    const postAndPhotos = await loadPosts()
-    this.setState(
-      {
-        posts: postAndPhotos.slice(page, postsPerPage),
-        allPosts: postAndPhotos
-      }
-    )
-  }
+  const handleLoadPosts = useCallback( async (page, postsPerPage) => {
+    const postAndPhotos = await loadPostsEngine()
+    setPosts(postAndPhotos.slice(page, postsPerPage))
+    setAllPosts(postAndPhotos)
+  }, [])
+
+  useEffect(() => {
+    handleLoadPosts(0, postsPerPage)
+  }, [handleLoadPosts, postsPerPage])
 
   const loadMorePost = () => {
-    console.log('Clicado');
-    const {
-      page,
-      postsPerPage,
-      allPosts,
-      posts
-    } = this.state
     const nextPage = page + postsPerPage
     const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage)
     posts.push(...nextPosts)
 
-    this.setState({posts, page: nextPage})
+    setPages(nextPage)
+    setPosts(posts)
   }
 
   const handleChange = (value) => {
-    console.log(value.target.value)
-    this.setState({searchValue: value.target.value})
-    console.log(this.state.searchValue);
+    setSearchValue(value.target.value)
   }
 
   return (
@@ -57,7 +48,7 @@ export const Home = () => {
       {
         filterdPosts.length > 0 ? (<div className='posts'>
         {filterdPosts.map(post => (
-          <PostCard 
+          <PostCard
             key={post.id}
             title={post.title}
             body={post.body}
@@ -65,7 +56,7 @@ export const Home = () => {
         ))}
         </div>) : <h3>Não há posts com essas palavras.</h3>
       }
-      {!searchValue && (<ButtonLoadMore 
+      {!searchValue && (<ButtonLoadMore
       loadMore={loadMorePost}
       setDisable={noMorePosts}
       />)}
@@ -133,7 +124,7 @@ class Home2 extends Component {
         {
           filterdPosts.length > 0 ? (<div className='posts'>
           {filterdPosts.map(post => (
-            <PostCard 
+            <PostCard
               key={post.id}
               title={post.title}
               body={post.body}
@@ -141,7 +132,7 @@ class Home2 extends Component {
           ))}
           </div>) : <h3>Não há posts com essas palavras.</h3>
         }
-        {!searchValue && (<ButtonLoadMore 
+        {!searchValue && (<ButtonLoadMore
         loadMore={this.loadMorePost}
         setDisable={noMorePosts}
         />)}
