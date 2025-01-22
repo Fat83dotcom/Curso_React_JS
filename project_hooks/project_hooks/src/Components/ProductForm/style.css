@@ -1,0 +1,15 @@
+.product-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: flex-start;
+}
+.product-form input {
+    margin-bottom: 15px;
+    height: 35px;
+    min-width: 500px;
+    border-radius: 5px;
+}
+.product-form label {
+    font-size: larger;
+}

@@ -1,0 +1,15 @@
+.client-form{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: flex-start;
+}
+.client-form input {
+    margin-bottom: 15px;
+    height: 35px;
+    min-width: 500px;
+    border-radius: 5px;
+}
+.client-form label {
+    font-size: larger;
+}
