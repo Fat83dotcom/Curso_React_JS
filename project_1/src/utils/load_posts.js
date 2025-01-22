@@ -1,4 +1,4 @@
-const loadPosts = async () => {
+const loadPostsEngine = async () => {
   const postResponse = fetch('https://jsonplaceholder.typicode.com/posts')
   const photoResponse = fetch('https://jsonplaceholder.typicode.com/photos')
   const [posts, photo] = await Promise.all([postResponse, photoResponse])
@@ -11,4 +11,4 @@ const loadPosts = async () => {
   return postAndPhotos
 }
 
-export default loadPosts
+export default loadPostsEngine
