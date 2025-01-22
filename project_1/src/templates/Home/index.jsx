@@ -1,7 +1,7 @@
-import { Component, useState } from 'react'
+import { Component, useCallback, useEffect, useState } from 'react'
 import './style.css'
 import { PostCard } from '../../components/PostcCard'
-import loadPosts from '../../utils/load_posts'
+import loadPostsEngine from '../../utils/load_posts'
 import { ButtonLoadMore } from '../../components/Button'
 import { SearchInput } from '../../components/Input'
 
