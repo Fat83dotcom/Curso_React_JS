@@ -4,7 +4,7 @@ import './style.css'
 const RegisterProduct = () => {
     return (
         <>
-            <h1>Cadastrar Produtos</h1>
+            <h1>Cadastrar Produto</h1>
             <ProductForm/>
         </>
     )
