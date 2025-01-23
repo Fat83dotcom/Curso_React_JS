@@ -1,5 +1,5 @@
 import './style.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
 import { ClearButton } from '../ClearButton'
 
@@ -40,6 +40,21 @@ export const ClientForm = () => {
                 adress: '',
             }
         )
+    }
+
+    const handleSubmitData = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/items/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+        } catch (error) {
+
+        }
     }
 
     return (
