@@ -1,6 +1,7 @@
 .style-button {
     width: 100%;
     background: #aaa;
+    margin-bottom: 10px;
 }
 .style-button:hover{
     background: #888;
