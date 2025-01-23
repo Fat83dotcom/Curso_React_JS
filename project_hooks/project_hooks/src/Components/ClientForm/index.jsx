@@ -1,6 +1,7 @@
 import './style.css'
 import { useState } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
+import { ClearButton } from '../ClearButton'
 
 export const ClientForm = () => {
     const [formData, setFormData] = useState(
@@ -12,6 +13,7 @@ export const ClientForm = () => {
             adress: '',
         }
     )
+    // const [buttonStatus, setButtonStatus] = useState(false)
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -26,6 +28,18 @@ export const ClientForm = () => {
             console.log('Grava dados no banco.') :
             console.log('Falta dados no formulario.');
         }
+    }
+
+    const handleClearForm = () => {
+        setFormData(
+            {
+                name: '',
+                secondName: '',
+                email: '',
+                phone: '',
+                adress: '',
+            }
+        )
     }
 
     return (
@@ -47,6 +61,7 @@ export const ClientForm = () => {
                 <input value={formData.adress}
                     onChange={handleChange} type="text" name="adress" id="adress" />
             </div>
+            <ClearButton click={handleClearForm}/>
             <ClientSubmitButton click={handleClick}/>
         </>
     )
