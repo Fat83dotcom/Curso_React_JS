@@ -7,7 +7,7 @@
 .client-form input {
     margin-bottom: 15px;
     height: 35px;
-    min-width: 500px;
+    min-width: 99%;
     border-radius: 5px;
 }
 .client-form label {
