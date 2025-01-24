@@ -2,8 +2,11 @@ import './style.css'
 import { useState } from 'react'
 import { ProductButton } from '../ProductButton'
 import { ClearButton } from '../ClearButton'
+import { handleSubmitData } from '../../Utils/ApiCalls'
+import { Warning } from '../Warning'
 
 export const ProductForm = () => {
+    const [registerStatus, setRegisterStatus] = useState('')
     const [formData, setFormData] = useState(
         {
             name: '',
@@ -20,12 +23,18 @@ export const ProductForm = () => {
         )
     }
 
-    const handleRegisterClick = () => {
-        {
-            formData.name && formData.price && formData.quantity ?
-            console.log('Grava os dados no banco') :
-            console.log('Falta dados no formulario')
+    const handleRegisterClick = async () => {
+        if (formData.name && formData.price && formData.quantity) {
+            const war = await handleSubmitData("http://127.0.0.1:8000/register_product/", 'POST', formData, handleClearForm)
+            handleWarning(war)
+        }else {
+            handleWarning('Faltam Dados no Formulario')
         }
+    }
+
+    const handleWarning = async (msg) => {
+        setRegisterStatus(msg)
+        await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
     }
 
     const handleClearForm = () => {
@@ -53,6 +62,7 @@ export const ProductForm = () => {
             </div>
             <ClearButton click={handleClearForm}/>
             <ProductButton click={handleRegisterClick}/>
+            <Warning warning={registerStatus}/>
         </>
     )
 }
