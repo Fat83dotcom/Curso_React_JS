@@ -1,5 +1,5 @@
 import './style.css'
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
 import { ClearButton } from '../ClearButton'
 import { handleSubmitData } from '../../Utils/ApiCalls'
@@ -40,14 +40,13 @@ export const ClientForm = () => {
                 address: '',
             }
         )
-    }, [setFormData])
+    }, [])
 
     const handleClick = useCallback(async () => {
         if ( formData.name && formData.second_name &&
             formData.email && formData.phone && formData.address) {
             const war = await handleSubmitData("http://127.0.0.1:8000/register_customers/", 'POST', formData, handleClearForm)
             console.log(war);
-
             handleWarning(war)
         } else {
             handleWarning('Faltam Dados no Formulario')
@@ -56,6 +55,7 @@ export const ClientForm = () => {
 
     return (
         <>
+            <Warning warning={registerStatus}/>
             <div className="client-form">
                 <label htmlFor="name">Nome</label>
                 <input value={formData.name}
@@ -75,8 +75,7 @@ export const ClientForm = () => {
             </div>
 
             {useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])}
-            {useMemo(() =><ClientSubmitButton click={handleClick}/>, [handleClick])}
-            <Warning warning={registerStatus}/>
+            {useMemo(() => <ClientSubmitButton click={handleClick}/>, [handleClick])}
         </>
     )
 }
