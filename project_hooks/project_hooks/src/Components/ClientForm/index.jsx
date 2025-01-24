@@ -1,9 +1,10 @@
 import './style.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
 import { ClearButton } from '../ClearButton'
 import { handleSubmitData } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
+import { useCallback } from 'react'
 
 export const ClientForm = () => {
     const [registerStatus, setRegisterStatus] = useState('')
@@ -18,30 +19,18 @@ export const ClientForm = () => {
     )
     // const [buttonStatus, setButtonStatus] = useState(false)
 
+    const handleWarning = useCallback(async (msg) => {
+        setRegisterStatus(msg)
+        await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
+    }, [])
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({...prevData, [name]: value,}));
         console.log(formData);
     }
 
-    const handleClick = async () => {
-        if ( formData.name && formData.second_name &&
-            formData.email && formData.phone && formData.address) {
-            const war = await handleSubmitData("http://127.0.0.1:8000/register_customers/", 'POST', formData, handleClearForm)
-            console.log(war);
-
-            handleWarning(war)
-        } else {
-            handleWarning('Faltam Dados no Formulario')
-        }
-    }
-
-    const handleWarning = async (msg) => {
-        setRegisterStatus(msg)
-        await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
-    }
-
-    const handleClearForm = () => {
+    const handleClearForm = useCallback(() => {
         setFormData(
             {
                 name: '',
@@ -51,9 +40,19 @@ export const ClientForm = () => {
                 address: '',
             }
         )
-    }
+    }, [setFormData])
 
+    const handleClick = useCallback(async () => {
+        if ( formData.name && formData.second_name &&
+            formData.email && formData.phone && formData.address) {
+            const war = await handleSubmitData("http://127.0.0.1:8000/register_customers/", 'POST', formData, handleClearForm)
+            console.log(war);
 
+            handleWarning(war)
+        } else {
+            handleWarning('Faltam Dados no Formulario')
+        }
+    }, [formData, handleClearForm, handleWarning])
 
     return (
         <>
@@ -75,8 +74,8 @@ export const ClientForm = () => {
                     onChange={handleChange} type="text" name="address" id="address" />
             </div>
 
-            <ClearButton click={handleClearForm}/>
-            <ClientSubmitButton click={handleClick}/>
+            {useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])}
+            {useMemo(() =><ClientSubmitButton click={handleClick}/>, [handleClick])}
             <Warning warning={registerStatus}/>
         </>
     )
