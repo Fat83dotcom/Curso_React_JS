@@ -15,7 +15,7 @@ export const handleSubmitData = async (url, method, formData, handleClearForm) =
             return 'Item criado com sucesso!!'
 
         } else {
-            console.error("Erro ao criar o item:", response.statusText);
+            console.error("Erro ao criar o item:", response);
             return `Erro ao criar o item: ${response.statusText}`
         }
     } catch (error) {
