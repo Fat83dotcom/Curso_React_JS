@@ -12,7 +12,7 @@ export const handleSubmitData = async (url, method, formData, handleClearForm) =
             const data = await response.json();
             console.log("Item criado com sucesso:", data);
             handleClearForm()
-            return `Item criado com sucesso!!`
+            return 'Item criado com sucesso!!'
 
         } else {
             console.error("Erro ao criar o item:", response.statusText);
