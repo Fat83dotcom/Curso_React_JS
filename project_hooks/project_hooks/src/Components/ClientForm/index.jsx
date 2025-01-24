@@ -2,15 +2,18 @@ import './style.css'
 import { useEffect, useState } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
 import { ClearButton } from '../ClearButton'
+import { handleSubmitData } from '../../Utils/ApiCalls'
+import { Warning } from '../Warning'
 
 export const ClientForm = () => {
+    const [registerStatus, setRegisterStatus] = useState('')
     const [formData, setFormData] = useState(
         {
             name: '',
-            secondName: '',
+            second_name: '',
             email: '',
             phone: '',
-            adress: '',
+            address: '',
         }
     )
     // const [buttonStatus, setButtonStatus] = useState(false)
@@ -21,41 +24,36 @@ export const ClientForm = () => {
         console.log(formData);
     }
 
-    const handleClick = () => {
-        {
-            formData.name && formData.secondName &&
-            formData.email && formData.phone && formData.adress ?
-            console.log('Grava dados no banco.') :
-            console.log('Falta dados no formulario.');
+    const handleClick = async () => {
+        if ( formData.name && formData.second_name &&
+            formData.email && formData.phone && formData.address) {
+            const war = await handleSubmitData("http://127.0.0.1:8000/register_customers/", 'POST', formData, handleClearForm)
+            console.log(war);
+
+            handleWarning(war)
+        } else {
+            handleWarning('Faltam Dados no Formulario')
         }
+    }
+
+    const handleWarning = async (msg) => {
+        setRegisterStatus(msg)
+        await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
     }
 
     const handleClearForm = () => {
         setFormData(
             {
                 name: '',
-                secondName: '',
+                second_name: '',
                 email: '',
                 phone: '',
-                adress: '',
+                address: '',
             }
         )
     }
 
-    const handleSubmitData = async (e) => {
-        e.preventDefault()
-        try {
-            const response = await fetch("http://127.0.0.1:8000/api/items/", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-        } catch (error) {
 
-        }
-    }
 
     return (
         <>
@@ -63,9 +61,9 @@ export const ClientForm = () => {
                 <label htmlFor="name">Nome</label>
                 <input value={formData.name}
                 onChange={handleChange} type="text" name="name" id="name" />
-                <label htmlFor="secondName">Sobrenome</label>
-                <input value={formData.secondName}
-                onChange={handleChange} type="text" name="secondName" id="secondName" />
+                <label htmlFor="second_name">Sobrenome</label>
+                <input value={formData.second_name}
+                onChange={handleChange} type="text" name="second_name" id="second_name" />
                 <label htmlFor="email">E-mail</label>
                 <input value={formData.email}
                     onChange={handleChange} type="email" name="email" id="email" />
@@ -73,11 +71,13 @@ export const ClientForm = () => {
                 <input value={formData.phone}
                     onChange={handleChange} type="number" name="phone" id="phone" />
                 <label htmlFor="adress">Endereço</label>
-                <input value={formData.adress}
-                    onChange={handleChange} type="text" name="adress" id="adress" />
+                <input value={formData.address}
+                    onChange={handleChange} type="text" name="address" id="address" />
             </div>
+
             <ClearButton click={handleClearForm}/>
             <ClientSubmitButton click={handleClick}/>
+            <Warning warning={registerStatus}/>
         </>
     )
 }
