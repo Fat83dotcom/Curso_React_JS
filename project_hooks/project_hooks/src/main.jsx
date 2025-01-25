@@ -4,6 +4,9 @@ import './index.css'
 import RegisterCustomer from './Pages/RegisterCustomers/ResgisterCustomer'
 import RegisterProduct from './Pages/RegisterProduct/RegisterProduct'
 import { HeaderNavBar } from './Components/HeaderNavBar'
+import { SearchCustomerPage } from './Pages/SearchCustmers'
+import { SearchOrdersPage } from './Pages/SearchOrders'
+import { SearchProducts } from './Pages/SearchProducts'
 
 export const Home = () => {
     const [homeComponent, setHomeComponent] = useState(<h1>Escolha uma opção!</h1>)
@@ -12,13 +15,16 @@ export const Home = () => {
         {setComponent === 'customer' && setHomeComponent(<RegisterCustomer/>)}
         {setComponent === 'product' && setHomeComponent(<RegisterProduct/>)}
         {setComponent === 'order' && setHomeComponent(<h2>Página de vendas</h2>)}
+        {setComponent === 'searchCustomers' && setHomeComponent(<SearchCustomerPage/>)}
+        {setComponent === 'searchProducts' && setHomeComponent(<SearchProducts/>)}
+        {setComponent === 'SearchOrders' && setHomeComponent(<SearchOrdersPage/>)}
     }
 
     return (
-        <>
-            <HeaderNavBar click={handleHeaderClick}/>
-            {homeComponent}
-        </>
+      <>
+          <HeaderNavBar click={handleHeaderClick}/>
+          {homeComponent}
+      </>
     )
 }
 
