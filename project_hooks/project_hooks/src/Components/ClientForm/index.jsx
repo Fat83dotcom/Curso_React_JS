@@ -2,7 +2,7 @@ import './style.css'
 import { useState, useMemo } from 'react'
 import { ClientSubmitButton } from '../ClientButton'
 import { ClearButton } from '../ClearButton'
-import { handleSubmitData } from '../../Utils/ApiCalls'
+import { handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { useCallback } from 'react'
 
@@ -45,7 +45,7 @@ export const ClientForm = () => {
     const handleClick = useCallback(async () => {
         if ( formData.name && formData.second_name &&
             formData.email && formData.phone && formData.address) {
-            const war = await handleSubmitData("http://127.0.0.1:8000/register_customers/", 'POST', formData, handleClearForm)
+            const war = await handleSubmitPost("http://127.0.0.1:8000/register_customers/", formData, handleClearForm)
             console.log(war);
             handleWarning(war)
         } else {
