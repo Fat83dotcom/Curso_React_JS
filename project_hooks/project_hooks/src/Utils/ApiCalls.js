@@ -1,7 +1,7 @@
-export const handleSubmitData = async (url, method, formData, handleClearForm) => {
+export const handleSubmitPost = async (url, formData, handleClearForm) => {
     try {
         const response = await fetch(url, {
-            method: method,
+            method: 'POST',
             headers: {
               "Content-Type": "application/json",
             },
