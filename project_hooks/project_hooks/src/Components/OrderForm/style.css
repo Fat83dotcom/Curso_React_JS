@@ -1,11 +1,12 @@
 .conteiner {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-around;
 }
-
 .form-container {
     display: flex;
     flex-direction: column;
+    padding: 100px;
 }
 .form-container input {
     margin: 5px;
@@ -19,4 +20,14 @@
 }
 .form-container button:hover {
     background: #777;
+}
+.customer-container{
+    display: flex;
+    flex-direction: row;
+}
+.customer-container p, a {
+    margin: 10px;
+}
+.customer-container a:hover{
+    cursor: pointer;
 }
