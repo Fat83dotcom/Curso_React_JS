@@ -1,0 +1,22 @@
+.conteiner {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+.form-container input {
+    margin: 5px;
+}
+.form-container label{
+    margin: 5px;
+}
+.form-container button {
+    margin: 5px;
+    background: #888;
+}
+.form-container button:hover {
+    background: #777;
+}
