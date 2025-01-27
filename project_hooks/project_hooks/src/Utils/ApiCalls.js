@@ -23,3 +23,25 @@ export const handleSubmitPost = async (url, formData, handleClearForm) => {
         return `Erro na requisição: ${error}`
     }
 }
+
+export const handleSubmitGet = async (url, handleClearForm) => {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Sucesso:", data);
+            handleClearForm()
+            return data
+
+        } else {
+            console.error("Erro", response);
+            return {erro: `${response.statusText}`}
+        }
+    } catch (error) {
+        console.error("Erro na requisição:", error)
+        return {erro: `${error}`}
+    }
+}
