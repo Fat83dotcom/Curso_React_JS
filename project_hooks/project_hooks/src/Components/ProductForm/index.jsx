@@ -14,7 +14,7 @@ export const ProductForm = () => {
             quantity: '',
         }
     )
-    const [productCategory, setProductCartegory] = useState([])
+    const [productCategory, setProductCategory] = useState([])
 
     const handleClearForm = useCallback(() => {
         setFormData(
@@ -33,15 +33,13 @@ export const ProductForm = () => {
 
     useEffect(() => {
         const data = async () =>{
-            const d = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-            return d
-        }
-        setProductCartegory(data())
-        console.log(data())
-        console.log(productCategory());
+            const dt = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
+            console.log(dt.data);
 
-        return
-    }, [productCategory])
+            setProductCategory(dt.data)
+        }
+        data()
+    }, [])
 
     const handleRegisterClick = useCallback(async () => {
         if (formData.name && formData.price && formData.quantity) {
@@ -70,7 +68,9 @@ export const ProductForm = () => {
                     <label htmlFor="category-product">Categoria</label>
                     <select name="category" id="category" >
                         {productCategory.map((cat) => {
-                            <option key={cat.id} value={cat.category_name}>{cat.category_name}</option>
+                            return (
+                                <option key={cat.id} value={cat.category_name}>{cat.category_name}</option>
+                            )
                         })}
 
                     </select>
