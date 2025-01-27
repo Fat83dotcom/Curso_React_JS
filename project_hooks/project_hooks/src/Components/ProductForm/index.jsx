@@ -2,7 +2,7 @@ import './style.css'
 import { useState, useMemo, useCallback } from 'react'
 import { ProductButton } from '../ProductButton'
 import { ClearButton } from '../ClearButton'
-import { handleSubmitData } from '../../Utils/ApiCalls'
+import { handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 
 export const ProductForm = () => {
@@ -14,7 +14,6 @@ export const ProductForm = () => {
             quantity: '',
         }
     )
-    // const [buttonStatus, setButtonStatus] = useState(false)
 
     const handleClearForm = useCallback(() => {
         setFormData(
@@ -33,7 +32,7 @@ export const ProductForm = () => {
 
     const handleRegisterClick = useCallback(async () => {
         if (formData.name && formData.price && formData.quantity) {
-            const war = await handleSubmitData("http://127.0.0.1:8000/register_product/", 'POST', formData, handleClearForm)
+            const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", formData, handleClearForm)
             handleWarning(war)
         }else {
             handleWarning('Faltam Dados no Formulario')
