@@ -24,7 +24,7 @@ export const handleSubmitPost = async (url, formData, handleClearForm) => {
     }
 }
 
-export const handleSubmitGet = async (url, handleClearForm) => {
+export const handleSubmitGet = async (url) => {
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -32,16 +32,15 @@ export const handleSubmitGet = async (url, handleClearForm) => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log("Sucesso:", data);
-            handleClearForm()
-            return data
+            console.log("Sucesso:", data)
+            return {data: data, msg: 'Sucesso.'}
 
         } else {
             console.error("Erro", response);
-            return {erro: `${response.statusText}`}
+            return {msg: `${response.statusText}`}
         }
     } catch (error) {
         console.error("Erro na requisição:", error)
-        return {erro: `${error}`}
+        return {msg: `${error}`}
     }
 }
