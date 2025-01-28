@@ -62,26 +62,19 @@ export const OrderForm = ({change, customId}) => {
 
     return (
         <>
-            <div className='conteiner'>
-                <div className='form-container'>
-                    <label htmlFor="customer">Buscar por Cliente</label>
-                    <input onChange={handleOnChangeCustomerSearch} value={searchCustomer} type="search" name="customer" id="customer" />
-                    <button onClick={handleSearchClick}>Buscar</button>
-                </div>
-                <div className='found-container'>
-                    <h2>Clientes Encontrados:</h2>
-                    {customerSearched.map((customer) => {
-                        return (
-                            <div className='customer-container' key={customer.id}>
-                                <a onClick={handleOrderCustomerId}>{customer.id}</a>
-                                <p>{customer.name}</p>
-                                <p>{customer.second_name}</p>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
             <Warning warning={warning}/>
+            <Form
+                handleOnChangeCustomerSearch={handleOnChangeCustomerSearch}
+                searchCustomer={searchCustomer}
+                handleSearchClick={handleSearchClick}
+                customerSearched={customerSearched}
+                handleOrderCustomerId={handleOrderCustomerId}
+            />
         </>
     )
+}
+
+OrderForm.propTypes = {
+    change: P.func,
+    customId: P.func,
 }
