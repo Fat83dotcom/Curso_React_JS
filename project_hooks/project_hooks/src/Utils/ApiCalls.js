@@ -1,4 +1,4 @@
-export const handleSubmitPost = async (url, formData, handleClearForm) => {
+export const handleSubmitPost = async (url, formData) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -11,7 +11,6 @@ export const handleSubmitPost = async (url, formData, handleClearForm) => {
         if (response.ok) {
             const data = await response.json();
             console.log("Item criado com sucesso:", data);
-            handleClearForm()
             return 'Item criado com sucesso!!'
 
         } else {
