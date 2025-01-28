@@ -91,7 +91,7 @@ export const ProductForm = () => {
             <div className='container-product-form'>
                 <div className="product-form">
                     <label htmlFor="name">Nome Produto</label>
-                    <input value={formData.name}
+                    <input value={productInput.name}
                     onChange={handleChangeProduct} type="text" name="name" id="name" />
                     <label htmlFor="category-product">Categoria</label>
                     <select onChange={handleChangeProduct} name="category" id="category" >
