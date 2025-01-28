@@ -81,6 +81,10 @@ export const ProductForm = () => {
         setProductCategoryInput(category_name)
     }
 
+    useEffect(() => {
+        productCategoryData()
+    }, [])
+
     return (
         <>
             <Warning warning={registerStatus}/>
