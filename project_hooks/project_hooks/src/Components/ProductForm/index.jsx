@@ -45,32 +45,33 @@ export const ProductForm = () => {
     }
 
     const handleRegisterClick = useCallback(async () => {
-        if (formData.name && formData.price && formData.quantity) {
-            const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", formData)
-            handleClearForm()
+        if (productInput.name && productInput.price && productInput.quantity) {
+            const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", productInput)
+            handleClearProductForm()
             handleWarning(war)
         }else {
             handleWarning('Faltam Dados no Formulario')
         }
-    }, [formData, handleWarning, handleClearForm])
+    }, [productInput, handleWarning, handleClearProductForm])
 
     const handleRegisterCategoryClick = useCallback(async () => {
-        let war = ''
         if (productCategoryInput) {
-                war = await handleSubmitPost(
+                const war = await handleSubmitPost(
                 'http://127.0.0.1:8000/register_product_category/',
                 {category_name: productCategoryInput}
             )
+            productCategoryData()
+            handleClearCategoryProductForm()
             handleWarning(war)
         }
-        handleWarning(war)
-    }, [handleWarning, productCategoryInput])
+        handleWarning('Campo vazio.')
+    }, [handleWarning, productCategoryInput, handleClearCategoryProductForm])
 
     const handleChangeProduct = (e) => {
         const { name, value } = e.target;
-        console.log(formData);
-        
-        setFormData(
+        console.log(productInput);
+
+        setProductInput(
             (prevData) => ({...prevData, [name]: value,})
         )
     }
