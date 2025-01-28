@@ -24,10 +24,10 @@ export const ProductForm = () => {
                 name: '',
                 price: '',
                 quantity: '',
-                category: '',
+                category: formData.category,
             }
         )
-    }, [setFormData])
+    }, [setFormData, formData])
 
     const handleWarning = useCallback(async (msg) => {
         setRegisterStatus(msg)
