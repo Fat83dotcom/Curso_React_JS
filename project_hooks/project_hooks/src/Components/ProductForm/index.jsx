@@ -7,7 +7,7 @@ import { Warning } from '../Warning'
 
 export const ProductForm = () => {
     const [registerStatus, setRegisterStatus] = useState('')
-    const [formData, setFormData] = useState(
+    const [productInput, setProductInput] = useState(
         {
             name: '',
             price: '',
