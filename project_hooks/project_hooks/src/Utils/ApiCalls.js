@@ -11,15 +11,15 @@ export const handleSubmitPost = async (url, formData) => {
         if (response.ok) {
             const data = await response.json();
             console.log("Item criado com sucesso:", data);
-            return 'Item criado com sucesso!!'
+            return {msg: 'Item criado com sucesso!!'}
 
         } else {
             console.error("Erro ao criar o item:", response);
-            return `Erro ao criar o item: ${response.statusText}`
+            return  {msg: `Erro ao criar o item: ${response.statusText}`}
         }
     } catch (error) {
         console.error("Erro na requisição:", error)
-        return `Erro na requisição: ${error}`
+        return  {msg: `Erro na requisição: ${error}`}
     }
 }
 
