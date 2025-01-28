@@ -18,30 +18,31 @@ export const ProductForm = () => {
     const [productCategory, setProductCategory] = useState([])
     const [productCategoryInput, setProductCategoryInput] = useState('')
 
-    const handleClearForm = useCallback(() => {
-        setFormData(
+    const handleClearProductForm = useCallback(() => {
+        setProductInput(
             {
                 name: '',
                 price: '',
                 quantity: '',
-                category: formData.category,
+                category: productInput.category,
             }
         )
-    }, [setFormData, formData])
+    }, [setProductInput, productInput])
+
+    const handleClearCategoryProductForm = useCallback(() =>{
+        setProductCategoryInput('')
+    }, [setProductCategoryInput])
 
     const handleWarning = useCallback(async (msg) => {
         setRegisterStatus(msg)
         await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
     }, [])
 
-    useEffect(() => {
-        const data = async () =>{
-            const dt = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-            console.log(dt.data);
-            setProductCategory(dt.data)
-        }
-        data()
-    }, [])
+    const productCategoryData = async () => {
+        const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
+        console.log(data.data);
+        setProductCategory(data.data)
+    }
 
     const handleRegisterClick = useCallback(async () => {
         if (formData.name && formData.price && formData.quantity) {
