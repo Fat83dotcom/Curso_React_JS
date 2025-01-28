@@ -102,18 +102,20 @@ export const ProductForm = () => {
                         })}
                     </select>
                     <label htmlFor="price">Valor</label>
-                    <input value={formData.price}
+                    <input value={productInput.price}
                     onChange={handleChangeProduct} type="number" name="price" id="price" />
                     <label htmlFor="quantity">Quantidade</label>
-                    <input value={formData.quantity}
+                    <input value={productInput.quantity}
                     onChange={handleChangeProduct} type="number" name="quantity" id="quantity" />
-                    {useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])}
+                    {useMemo(() => <ClearButton click={handleClearProductForm}/>, [handleClearProductForm])}
                     {useMemo(() => <ProductButton click={handleRegisterClick}/>, [handleRegisterClick])}
                 </div>
                 <div className='category-form'>
                     <label htmlFor="category">Categoria</label>
-                    <input onChange={handleChangeProductCategory} type="text" name='category-form' id='category-form' />
-                    <button onClick={handleRegisterCategoryClick} className='style-button'>Cadastrar Categoria</button>
+                    <input onChange={handleChangeProductCategory} value={productCategoryInput} type="text" name='category-form' id='category-form' />
+                    {useMemo(()=> {
+                        return <button onClick={handleRegisterCategoryClick} className='style-button'>Cadastrar Categoria</button>
+                    }, [handleRegisterCategoryClick])}
                 </div>
             </div>
         </>
