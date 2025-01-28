@@ -11,7 +11,6 @@ export const OrderForm = ({change, customId}) => {
     const [warning, setWarning] = useState('')
     const [searchCustomer, setSearchCustomer] = useState('')
     const [customerSearched, setCustomerSearched] = useState([])
-    const [customerId, setCustomerId] = useState(0)
 
     const handleClearForm = () => {
         setSearchCustomer('')
@@ -44,8 +43,7 @@ export const OrderForm = ({change, customId}) => {
 
     const handleOrderCustomerId = (e) => {
         const id = e.target.text
-        setCustomerId(id)
-        customId(customerId)
+        customId(id)
         change('order')
         console.log(id)
     }
