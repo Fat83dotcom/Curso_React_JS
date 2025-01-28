@@ -32,10 +32,13 @@ export const handleSubmitGet = async (url) => {
         if (response.ok) {
             const data = await response.json();
             console.log("Sucesso:", data)
+
+
             return {data: data, msg: 'Sucesso.'}
 
         } else {
             console.error("Erro", response);
+            console.log(response.status);
             return {msg: `${response.statusText}`}
         }
     } catch (error) {
