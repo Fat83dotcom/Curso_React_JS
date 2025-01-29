@@ -11,7 +11,7 @@ export const handleSubmitPost = async (url, formData) => {
         if (response.ok) {
             const data = await response.json();
             console.log("Item criado com sucesso:", data);
-            return {msg: 'Item criado com sucesso!!'}
+            return {msg: 'Item criado com sucesso!!', data: data}
 
         } else {
             console.error("Erro ao criar o item:", response);
