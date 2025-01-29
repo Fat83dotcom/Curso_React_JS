@@ -48,7 +48,7 @@ export const ProductForm = () => {
         if (productInput.name && productInput.price && productInput.quantity) {
             const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", productInput)
             handleClearProductForm()
-            handleWarning(war)
+            handleWarning(war.msg)
         }else {
             handleWarning('Faltam Dados no Formulario')
         }
@@ -62,9 +62,10 @@ export const ProductForm = () => {
             )
             productCategoryData()
             handleClearCategoryProductForm()
-            handleWarning(war)
+            handleWarning(war.msg)
+        } else{
+            handleWarning('Campo vazio.')
         }
-        handleWarning('Campo vazio.')
     }, [handleWarning, productCategoryInput, handleClearCategoryProductForm])
 
     const handleChangeProduct = (e) => {
