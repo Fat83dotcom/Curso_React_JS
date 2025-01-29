@@ -35,6 +35,25 @@ export const Order = ({customerId, change}) => {
     return (
         <>
             <Warning warning={warning}/>
+            <div className='container-order-main'>
+                <div className='container-order'>
+                    <h2>Pedido</h2>
+                    <div>
+                        <div>
+                            <h3>Dados do Pedido</h3>
+                        </div>
+                        <div>
+                            <h3>Dados do Cliente</h3>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Adicione Produtos</h3>
+                    </div>
+                </div>
+                <div className='container-items'>
+                    <h3>Lista de itens</h3>
+                </div>
+            </div>
             <p>{customerId}</p>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
         </>
