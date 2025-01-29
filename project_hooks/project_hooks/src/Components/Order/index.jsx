@@ -7,15 +7,15 @@ import { Warning } from '../Warning'
 
 export const Order = ({customerId, change}) => {
 
-    const [warning, setWarning] = useState('')
+    const [warning, setWarning] = useState('teste')
 
-    const handleChangePage = () => {
+    const handleChangePage = useCallback(() => {
         change('orderForm')
-    }
+    }, [change])
 
     const handleWarning = useCallback(async (msg) => {
         setWarning(msg)
-        await new Promise(() => setTimeout(() => {setWarning('')}, 3000))
+        await new Promise((resolve) => setTimeout(() => {setWarning(''); resolve()}, 3000))
     }, [setWarning])
 
     const handleFetchOrder = useCallback(async() => {
@@ -35,7 +35,6 @@ export const Order = ({customerId, change}) => {
     return (
         <>
             <Warning warning={warning}/>
-            <p>Pagina de venda iniciada.</p>
             <p>{customerId}</p>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
         </>
