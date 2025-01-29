@@ -17,7 +17,6 @@ export const ClientForm = () => {
             address: '',
         }
     )
-    // const [buttonStatus, setButtonStatus] = useState(false)
 
     const handleWarning = useCallback(async (msg) => {
         setRegisterStatus(msg)
@@ -45,9 +44,11 @@ export const ClientForm = () => {
     const handleClick = useCallback(async () => {
         if ( formData.name && formData.second_name &&
             formData.email && formData.phone && formData.address) {
-            const war = await handleSubmitPost("http://127.0.0.1:8000/register_customers/", formData, handleClearForm)
-            console.log(war);
-            handleWarning(war)
+            const war = await handleSubmitPost(
+                "http://127.0.0.1:8000/register_customers/", formData
+            )
+            handleClearForm()
+            handleWarning(war.msg)
         } else {
             handleWarning('Faltam Dados no Formulario')
         }
