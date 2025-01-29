@@ -30,7 +30,7 @@ export const Home = () => {
 }
 
 createRoot(document.getElementById('root')).render(
-  // <StrictMode>
+  <StrictMode>
     <Home/>
-  // </StrictMode>,
+ </StrictMode>,
 )
