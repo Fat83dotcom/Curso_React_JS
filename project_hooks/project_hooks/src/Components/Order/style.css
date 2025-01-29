@@ -13,3 +13,12 @@
 .container-items{
     padding: 30px;
 }
+.order-customer-open{
+    display: flex;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.order-customer-open p{
+    margin: 10px;
+}
