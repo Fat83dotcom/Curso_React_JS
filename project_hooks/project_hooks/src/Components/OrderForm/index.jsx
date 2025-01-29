@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './style.css'
 import { handleSubmitGet } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
@@ -20,12 +20,12 @@ export const OrderForm = ({change, customId}) => {
         if (searchCustomer) {
             const url = `http://127.0.0.1:8000/search_customer/?search_name=${searchCustomer}`
             const data = await handleSubmitGet(url)
-            console.log(data.msg);
+            // console.log(data.msg);
             if (data.msg === 'Sucesso.'){
                 setCustomerSearched(data.data)
                 handleClearForm()
                 handleWarning(data.msg)
-                console.log(data.data);
+                // console.log(data.data);
             }
             if (data.msg === 'Not Found') {
                 setCustomerSearched([])
@@ -45,7 +45,7 @@ export const OrderForm = ({change, customId}) => {
         const id = e.target.text
         customId(id)
         change('order')
-        console.log(id)
+        // console.log(id)
     }
 
     const handleWarning = useCallback(async (msg) => {
@@ -57,6 +57,7 @@ export const OrderForm = ({change, customId}) => {
         const customer = e.target.value
         setSearchCustomer(customer)
     }
+
 
     return (
         <>
