@@ -10,7 +10,7 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
             <div className='container-order'>
                 <h2>Pedido</h2>
                 <div>
-                    <div>
+                    <div className='center-tables'>
                         <h3>Dados do Pedido</h3>
                         <table>
                             <thead>
@@ -33,17 +33,13 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
                             </tbody>
                         </table>
                     </div>
-                    <div>
+                    <div className='center-tables'>
                         <h3>Dados do Cliente</h3>
                         <table>
                             <thead>
                                 <tr>
                                     <th>Nome</th>
                                     <th>Sobrenome</th>
-                                    <th>Código Pedido</th>
-                                    <th>Data</th>
-                                    <th>Valor Total</th>
-                                    <th>Status Pedido</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,17 +47,13 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
                                     <tr key={data.pk}>
                                         <td>{data.customer_name}</td>
                                         <td>{data.customer_second_name}</td>
-                                        <td><a>{data.pk}</a></td>
-                                        <td>{data.date}</td>
-                                        <td>{data.total}</td>
-                                        <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
 
                     </div>
-                    <div>
+                    <div className='center-tables'>
                     <h3>Pedidos do Cliente</h3>
                         <table>
                             <thead>
