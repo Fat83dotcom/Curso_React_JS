@@ -7,89 +7,89 @@ import { Warning } from '../Warning'
 const OrderDisplay = ({orderData, orderSearchData}) => {
     return (
         <>
-           
-                <div className='container-order'>
-                    <h2>Pedido</h2>
+            <div className='container-order'>
+                <h2>Pedido</h2>
+                <div>
                     <div>
-                        <div>
-                            <h3>Dados do Pedido</h3>
-                            {orderData.map((data) => {
-                                return (
-                                    <div className='order-customer-open' key={data.pk}>
-                                        <div>
-                                        <p>Código Pedido</p>
-                                        <a>{data.pk}</a>
-                                        </div>
-                                        <div>
-                                        <p>Data</p>
-                                        <p>{data.date}</p>
-                                        </div>
-                                        <div>
-                                        <p>Valor Total</p>
-                                        <p>{data.total}</p>
-                                        </div>
-                                        <div>
-                                        <p>Status Pedido</p>
-                                        <p>{data.order_status ? 'Aberto' : 'Ferchado'}</p>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div>
-                            <h3>Dados do Cliente</h3>
-                            {orderData.map((data) => {
-                                return (
-                                    <div className='order-customer-open' key={data.pk}>
-                                        <div>
-                                        <p>Nome</p>
-                                        <p>{data.customer_name}</p>
-                                        </div>
-                                        <div>
-                                        <p>Sobrenome</p>
-                                        <p>{data.customer_second_name}</p>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                        <div>
-                            <h3>Pedidos do Cliente</h3>
-                            {orderSearchData.map((data) => {
-                                return (
-                                    <div className='order-customer-open' key={data.pk}>
-                                        <div>
-                                        <p>Nome</p>
-                                        <p>{data.customer_name}</p>
-                                        </div>
-                                        <div>
-                                        <p>Sobrenome</p>
-                                        <p>{data.customer_second_name}</p>
-                                        </div>
-                                        <div>
-                                        <p>Código Pedido</p>
-                                        <a>{data.pk}</a>
-                                        </div>
-                                        <div>
-                                        <p>Data</p>
-                                        <p>{data.date}</p>
-                                        </div>
-                                        <div>
-                                        <p>Valor Total</p>
-                                        <p>{data.total}</p>
-                                        </div>
-                                        <div>
-                                        <p>Status Pedido</p>
-                                        <p>{data.order_status ? 'Aberto' : 'Ferchado'}</p>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </div>
+                        <h3>Dados do Pedido</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código Pedido</th>
+                                    <th>Data</th>
+                                    <th>Valor Total</th>
+                                    <th>Status Pedido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orderData.map((data) => (
+                                    <tr key={data.pk}>
+                                        <td><a>{data.pk}</a></td>
+                                        <td>{data.date}</td>
+                                        <td>{data.total}</td>
+                                        <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <h3>Dados do Cliente</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Sobrenome</th>
+                                    <th>Código Pedido</th>
+                                    <th>Data</th>
+                                    <th>Valor Total</th>
+                                    <th>Status Pedido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orderData.map((data) => (
+                                    <tr key={data.pk}>
+                                        <td>{data.customer_name}</td>
+                                        <td>{data.customer_second_name}</td>
+                                        <td><a>{data.pk}</a></td>
+                                        <td>{data.date}</td>
+                                        <td>{data.total}</td>
+                                        <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div>
+                    <h3>Pedidos do Cliente</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Sobrenome</th>
+                                    <th>Código Pedido</th>
+                                    <th>Data</th>
+                                    <th>Valor Total</th>
+                                    <th>Status Pedido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orderSearchData.map((data) => (
+                                    <tr key={data.pk}>
+                                        <td>{data.customer_name}</td>
+                                        <td>{data.customer_second_name}</td>
+                                        <td><a>{data.pk}</a></td>
+                                        <td>{data.date}</td>
+                                        <td>{data.total}</td>
+                                        <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-               
-            
+            </div>
         </>
     )
 }
@@ -98,7 +98,6 @@ const OrderAppendItems = () => {
     return (
         <div>
             <h3>Adicione Produtos</h3>
-            
         </div>
     )
 }
