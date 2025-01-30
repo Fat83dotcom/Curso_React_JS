@@ -19,6 +19,6 @@
     align-items: center;
     justify-content: center;
 }
-.order-customer-open p{
+.order-customer-open th td{
     margin: 10px;
 }
