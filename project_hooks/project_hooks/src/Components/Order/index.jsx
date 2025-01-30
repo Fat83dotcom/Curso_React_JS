@@ -4,11 +4,10 @@ import P from 'prop-types'
 import { handleSubmitGet, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 
-const OrderDisplay = ({handleFetchOrder, orderData, orderSearchData, handleChangePage}) => {
+const OrderDisplay = ({orderData, orderSearchData}) => {
     return (
         <>
-            <button onClick={handleFetchOrder}>Criar Pedido</button>
-            <div className='container-order-main'>
+           
                 <div className='container-order'>
                     <h2>Pedido</h2>
                     <div>
@@ -31,7 +30,7 @@ const OrderDisplay = ({handleFetchOrder, orderData, orderSearchData, handleChang
                                         </div>
                                         <div>
                                         <p>Status Pedido</p>
-                                        <p>{data.order_status}</p>
+                                        <p>{data.order_status ? 'Aberto' : 'Ferchado'}</p>
                                         </div>
                                     </div>
                                 )
@@ -55,7 +54,7 @@ const OrderDisplay = ({handleFetchOrder, orderData, orderSearchData, handleChang
                             })}
                         </div>
                         <div>
-                            <h3>Pedidos do Cliente em Aberto</h3>
+                            <h3>Pedidos do Cliente</h3>
                             {orderSearchData.map((data) => {
                                 return (
                                     <div className='order-customer-open' key={data.pk}>
@@ -81,23 +80,34 @@ const OrderDisplay = ({handleFetchOrder, orderData, orderSearchData, handleChang
                                         </div>
                                         <div>
                                         <p>Status Pedido</p>
-                                        <p>{data.order_status}</p>
+                                        <p>{data.order_status ? 'Aberto' : 'Ferchado'}</p>
                                         </div>
                                     </div>
                                 )
                             })}
                         </div>
                     </div>
-                    <div>
-                        <h3>Adicione Produtos</h3>
-                    </div>
                 </div>
-                <div className='container-items'>
-                    <h3>Lista de itens</h3>
-                </div>
-            </div>
-            <button onClick={handleChangePage}>Voltar à página anterior.</button>
+               
+            
         </>
+    )
+}
+
+const OrderAppendItems = () => {
+    return (
+        <div>
+            <h3>Adicione Produtos</h3>
+            
+        </div>
+    )
+}
+
+const OrderListItems = () => {
+    return (
+        <div className='container-items'>
+            <h3>Lista de itens</h3>
+        </div>
     )
 }
 
@@ -147,13 +157,18 @@ export const Order = ({customerId, change}) => {
     return (
         <>
             <Warning warning={warning}/>
-            <OrderDisplay
-                handleFetchOrder={handleFetchOrder}
-                orderData={orderCode}
-                orderSearchData={orderSearchData}
-                handleChangePage={handleChangePage}
-            />
-
+            <button onClick={handleFetchOrder}>Criar Pedido</button>
+            <div className='container-order-main'>
+                <OrderDisplay
+                    handleFetchOrder={handleFetchOrder}
+                    orderData={orderData}
+                    orderSearchData={orderSearchData}
+                    handleChangePage={handleChangePage}
+                />
+                <OrderAppendItems/>
+                <OrderListItems/>
+            </div>
+            <button onClick={handleChangePage}>Voltar à página anterior.</button>
         </>
     )
 }
