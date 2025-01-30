@@ -52,3 +52,24 @@ a {
     color: #007bff;
     text-decoration: none;
 }
+.click-product {
+    cursor: pointer;
+}
+.click-product:hover{
+    background: #aaa;
+}
+.search-products-order {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-items: center;
+}
+.search-products-order input{
+    margin-bottom: 15px;
+}
+.container-search-products-order{
+    display: flex;
+}
+.select-category {
+    margin-bottom: 15px;
+}

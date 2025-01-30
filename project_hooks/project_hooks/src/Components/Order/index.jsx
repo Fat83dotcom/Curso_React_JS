@@ -3,6 +3,8 @@ import P from 'prop-types'
 import { useState, useCallback, useEffect } from 'react'
 import { handleSubmitGet, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
+import { SelectCategory } from '../CategorySelect'
+import { Warning2 } from '../Warning2'
 
 //Filhos
 const OrderDisplay = ({orderData, orderSearchData}) => {
@@ -72,7 +74,7 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orderSearchData.map((data) => {
+                                {orderSearchData ? orderSearchData.map((data) => {
                                     return (
                                         <tr key={data.pk}>
                                             <td>{data.customer_name}</td>
@@ -83,7 +85,7 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
                                             <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
                                         </tr>
                                     )
-                                })}
+                                }) : <p></p>}
                             </tbody>
                         </table>
                     </div>
@@ -95,25 +97,91 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
 
 const OrderAppendItems = () => {
     const [products, setProducts] = useState([])
+    const [chosenProduct, setChosenProduct] = useState('')
+    const [productCategory, setProductCategory] = useState([])
+    const [productByCategory, setProductByCategory] = useState([])
+    const [categoryId, setCategoryId] = useState('')
+    const [warning, setWarning] = useState('')
+
+    const productCategoryData = useCallback(async () => {
+        const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
+        console.log(data.data);
+        setProductCategory(data.data)
+    }, [])
 
     const handleFetchProducts = useCallback(async () => {
         const productData = await handleSubmitGet('http://127.0.0.1:8000/get_products/')
-        if (productData.data) {
-            console.log(productData);
+        console.log(productData.data);
 
+        if (productData.data) {
             setProducts(productData.data)
+            setProductByCategory([])
         } else {
             setProducts([])
+
         }
         console.log(products)
     }, [])
 
+    const handleClickSearchProductByCategory = useCallback(async () => {
+        const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
+        const categoryData = await handleSubmitGet(url)
+        console.log(categoryData.data);
+
+        if (categoryData.data) {
+            setProductByCategory(categoryData.data)
+            setProducts([])
+        } else {
+            setWarning('Não encontrado.')
+            setProductByCategory([])
+        }
+
+        console.log(productByCategory);
+    }, [categoryId, productByCategory])
+
+    const handleClickSearchProductByName = () => {
+
+    }
+
+    const handleClickAppendProduct = () => {
+
+    }
+
+    const handleChangeProduct = (e) => {
+        const value = e.target.value
+        setCategoryId(value)
+        console.log(categoryId);
+    }
+
+    useEffect(() => {
+        productCategoryData()
+    }, [productCategoryData])
+
     useEffect(() =>{
         handleFetchProducts()
     }, [handleFetchProducts])
+
     return (
         <div>
             <h3>Adicione Produtos</h3>
+            <Warning2 msg={warning}/>
+            <div className='container-search-products-order'>
+                <div className='search-products-order'>
+                    <h5>Buscar por Nome:</h5>
+                    <input type="text" name="product-name" id="product-name" />
+                    <button onClick={handleClickSearchProductByName}>Buscar</button>
+                </div>
+                <div className='search-products-order'>
+                    <h5>Buscar por Categoria:</h5>
+                    <div className='select-category'>
+                        <SelectCategory
+                            handleChangeProduct={handleChangeProduct}
+                            productCategory={productCategory}
+                        />
+                    </div>
+                    <button onClick={handleClickSearchProductByCategory}>Buscar</button>
+                </div>
+            </div>
             <div className='container-order'>
                 <h2>Produtos</h2>
                 <div>
@@ -128,9 +196,9 @@ const OrderAppendItems = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {products.map((data) => {
+                                {products && products.map((data) => {
                                     return (
-                                        <tr key={data.id}>
+                                        <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
                                             <td><a>{data.id}</a></td>
                                             <td>{data.name}</td>
                                             <td>{data.price}</td>
@@ -139,12 +207,21 @@ const OrderAppendItems = () => {
                                     )
                                 }
                                )}
+                               {productByCategory && productByCategory.map((data) => {
+                                return (
+                                    <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
+                                        <td><a>{data.id}</a></td>
+                                        <td>{data.name}</td>
+                                        <td>{data.price}</td>
+                                        <td>{data.quantity}</td>
+                                    </tr>
+                                )
+                               })}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

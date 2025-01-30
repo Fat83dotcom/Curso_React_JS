@@ -4,6 +4,7 @@ import { ProductButton } from '../ProductButton'
 import { ClearButton } from '../ClearButton'
 import { handleSubmitGet, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
+import { SelectCategory } from '../CategorySelect'
 
 export const ProductForm = () => {
     const [registerStatus, setRegisterStatus] = useState('')
@@ -95,13 +96,10 @@ export const ProductForm = () => {
                     <input value={productInput.name}
                     onChange={handleChangeProduct} type="text" name="name" id="name" />
                     <label htmlFor="category-product">Categoria</label>
-                    <select onChange={handleChangeProduct} name="category" id="category" >
-                        {productCategory.map((cat) => {
-                            return (
-                                <option key={cat.id} value={cat.id}>{cat.category_name}</option>
-                            )
-                        })}
-                    </select>
+                    <SelectCategory
+                        handleChangeProduct={handleChangeProduct}
+                        productCategory={productCategory}
+                    />
                     <label htmlFor="price">Valor</label>
                     <input value={productInput.price}
                     onChange={handleChangeProduct} type="number" name="price" id="price" />
