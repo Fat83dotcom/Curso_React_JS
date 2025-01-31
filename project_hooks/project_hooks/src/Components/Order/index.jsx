@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { handleSubmitGet, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { SelectCategory } from '../CategorySelect'
-import { Warning2 } from '../Warning2'
+
 
 //Filhos
 const OrderDisplay = ({orderData, orderSearchData}) => {
@@ -99,8 +99,13 @@ const OrderAppendItems = () => {
     const [products, setProducts] = useState([])
     const [chosenProduct, setChosenProduct] = useState('')
     const [productCategory, setProductCategory] = useState([])
+
+    const [productByName, setProductByName] = useState([])
     const [productByCategory, setProductByCategory] = useState([])
+
     const [categoryId, setCategoryId] = useState('')
+    const [productName, setProductName] = useState('')
+
     const [warning, setWarning] = useState('')
 
     const productCategoryData = useCallback(async () => {
