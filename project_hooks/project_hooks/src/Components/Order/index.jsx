@@ -357,13 +357,15 @@ export const Order = ({customerId, change}) => {
         if (data.data) {
             const orderData = await handleFetchSearchOrder()
             setOrderData([orderData])
+            setOrderId(orderData.id)
             handleWarning(data.msg)
         } else {
             const orderDataUnauthorized = await handleFetchSearchOrder()
+            setOrderId(orderDataUnauthorized.pk)
             setOrderSearchData([orderDataUnauthorized])
             handleWarning(data.msg)
         }
-    }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder])
+    }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
     return (
         <>
@@ -376,8 +378,7 @@ export const Order = ({customerId, change}) => {
                     orderSearchData={orderSearchData}
                     handleChangePage={handleChangePage}
                 />
-                <OrderAppendItems/>
-                <OrderListItems/>
+                <OrderAppendItems orderId={orderId}/>
             </div>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
         </>
@@ -387,6 +388,15 @@ export const Order = ({customerId, change}) => {
 Order.propTypes = {
     customerId: P.string,
     change: P.func,
+}
+
+OrderAppendItems.propTypes ={
+    orderId: P.number
+}
+
+OrderListItems.propTypes = {
+    orderId: P.number,
+    product: P.array,
 }
 
 OrderDisplay.propTypes = {
