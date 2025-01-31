@@ -144,6 +144,7 @@ const OrderAppendItems = () => {
             handleWarning('Não encontrado.')
             setProductByCategory([])
         }
+    }, [categoryId, handleWarning])
 
         console.log(productByCategory);
     }, [categoryId, productByCategory])
