@@ -123,10 +123,13 @@ const OrderAppendItems = () => {
             setProductByCategory([])
         } else {
             setProducts([])
-
         }
-        console.log(products)
     }, [])
+
+    const handleWarning = useCallback(async (msg) => {
+        setWarning(msg)
+        await new Promise((resolve) => setTimeout(() => {setWarning(''); resolve()}, 3000))
+    }, [setWarning])
 
     const handleClickSearchProductByCategory = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
