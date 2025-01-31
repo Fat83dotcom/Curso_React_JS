@@ -188,7 +188,7 @@ const OrderAppendItems = ({orderId}) => {
 
     const handleInputChangeProduct = (e) => {
         const value = e.target.value
-        setProductName(value)       
+        setProductName(value)
     }
 
     useEffect(() => {
@@ -200,6 +200,7 @@ const OrderAppendItems = ({orderId}) => {
     }, [handleFetchProducts])
 
     return (
+        <>
         <div>
             <h3>Adicione Produtos</h3>
             <Warning warning={warning}/>
@@ -272,22 +273,59 @@ const OrderAppendItems = ({orderId}) => {
                 </div>
             </div>
         </div>
+        <div>
+            <OrderListItems idOrder={1} product={chosenProduct}/>
+        </div>
+        </>
     )
 }
 
-const OrderListItems = () => {
+const OrderListItems = ({product}) => {
+
+    useEffect(() => {
+        console.log(product);
+
+    }, [product])
+    console.log(product)
     return (
         <div className='container-items'>
             <h3>Lista de itens</h3>
+
+            <div className='center-tables'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>código Pedido</th>
+                                <th>Código Produto</th>
+                                <th>Nome</th>
+                                <th>Preço R$</th>
+                                <th>Qtd</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {product && product.map((data, index) => {
+                                return (
+                                    <tr  className='click-product' key={index}>
+                                        <td><a>{data.orderId}</a></td>
+                                        <td><a>{data.id}</a></td>
+                                        <td>{data.name}</td>
+                                        <td>{data.price}</td>
+                                        <td>{data.quantity}</td>
+                                    </tr>
+                                )
+                            }
+                        )}
+                        </tbody>
+                    </table>
+                </div>
         </div>
     )
 }
 
-
 //Pai
 export const Order = ({customerId, change}) => {
     const [warning, setWarning] = useState('')
-    const [orderCode, setOrderCode] = useState('')
+    const [orderId, setOrderId] = useState(0)
     const [orderData, setOrderData] = useState([])
     const [orderSearchData, setOrderSearchData] = useState([])
 
