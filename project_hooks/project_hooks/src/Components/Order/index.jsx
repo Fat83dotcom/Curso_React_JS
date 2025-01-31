@@ -138,9 +138,10 @@ const OrderAppendItems = () => {
 
         if (categoryData.data) {
             setProductByCategory(categoryData.data)
+            setProductByName([])
             setProducts([])
         } else {
-            setWarning('Não encontrado.')
+            handleWarning('Não encontrado.')
             setProductByCategory([])
         }
 
