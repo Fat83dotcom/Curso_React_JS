@@ -95,9 +95,9 @@ const OrderDisplay = ({orderData, orderSearchData}) => {
     )
 }
 
-const OrderAppendItems = () => {
+const OrderAppendItems = ({orderId}) => {
     const [products, setProducts] = useState([])
-    const [chosenProduct, setChosenProduct] = useState('')
+    const [chosenProduct, setChosenProduct] = useState([])
     const [productCategory, setProductCategory] = useState([])
 
     const [productByName, setProductByName] = useState([])
@@ -159,8 +159,25 @@ const OrderAppendItems = () => {
         }
     }, [productName, handleWarning])
 
-    const handleClickAppendProduct = () => {
+    const handleClickAppendProduct = (e) => {
+        if (orderId !== 0) {
+            const row = e.currentTarget
 
+            const id = row.children[0].innerText;
+            const name = row.children[1].innerText;
+            const price = row.children[2].innerText;
+
+            const product = {
+                id,
+                name,
+                price,
+                quantity: 1,
+                orderId : orderId,
+            };
+            setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
+            console.log(product);
+        }
+        handleWarning('Crie um pedido.')
     }
 
     const handleSelectChangeProduct = (e) => {
