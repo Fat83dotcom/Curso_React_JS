@@ -185,18 +185,18 @@ const OrderAppendItems = () => {
     return (
         <div>
             <h3>Adicione Produtos</h3>
-            <Warning2 msg={warning}/>
+            <Warning warning={warning}/>
             <div className='container-search-products-order'>
                 <div className='search-products-order'>
                     <h5>Buscar por Nome:</h5>
-                    <input type="text" name="product-name" id="product-name" />
+                    <input onChange={handleInputChangeProduct} type="text" value={productName} name="product-name" id="product-name" />
                     <button onClick={handleClickSearchProductByName}>Buscar</button>
                 </div>
                 <div className='search-products-order'>
                     <h5>Buscar por Categoria:</h5>
                     <div className='select-category'>
                         <SelectCategory
-                            handleChangeProduct={handleChangeProduct}
+                            handleChangeProduct={handleSelectChangeProduct}
                             productCategory={productCategory}
                         />
                     </div>
@@ -205,6 +205,7 @@ const OrderAppendItems = () => {
             </div>
             <div className='container-order'>
                 <h2>Produtos</h2>
+                <h5>Clique nos produtos para adicionar</h5>
                 <div>
                     <div className='center-tables'>
                         <table>
@@ -238,6 +239,16 @@ const OrderAppendItems = () => {
                                     </tr>
                                 )
                                })}
+                                {productByName && productByName.map((data) => {
+                                    return (
+                                        <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
+                                            <td><a>{data.id}</a></td>
+                                            <td>{data.name}</td>
+                                            <td>{data.price}</td>
+                                            <td>{data.quantity}</td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </div>
