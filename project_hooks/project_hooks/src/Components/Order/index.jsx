@@ -163,10 +163,15 @@ const OrderAppendItems = () => {
 
     }
 
-    const handleChangeProduct = (e) => {
+    const handleSelectChangeProduct = (e) => {
         const value = e.target.value
         setCategoryId(value)
         console.log(categoryId);
+    }
+
+    const handleInputChangeProduct = (e) => {
+        const value = e.target.value
+        setProductName(value)       
     }
 
     useEffect(() => {
