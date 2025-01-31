@@ -110,7 +110,6 @@ const OrderAppendItems = ({orderId}) => {
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-        console.log(data.data);
         setProductCategory(data.data)
     }, [])
 
@@ -159,8 +158,11 @@ const OrderAppendItems = ({orderId}) => {
         }
     }, [productName, handleWarning])
 
-    const handleClickAppendProduct = (e) => {
+    const handleClickAppendProduct = async (e) => {
+        // console.log(orderId);
+
         if (orderId !== 0) {
+            console.log(orderId);
             const row = e.currentTarget
 
             const id = row.children[0].innerText;
@@ -174,10 +176,24 @@ const OrderAppendItems = ({orderId}) => {
                 quantity: 1,
                 orderId : orderId,
             };
-            setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
-            console.log(product);
+            const url = 'http://127.0.0.1:8000/append_items/'
+            const body = {
+                id_order: orderId,
+                id_product: product.id,
+                quantity: product.quantity
+            }
+            const saveProductsOnDB = await handleSubmitPost(url, body)
+            handleWarning(saveProductsOnDB.msg.msg)
+
+            if (saveProductsOnDB.response === 200) {
+                console.log(saveProductsOnDB.response);
+                setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
+            }
+            console.log(saveProductsOnDB.msg);
         }
-        handleWarning('Crie um pedido.')
+        else {
+            handleWarning('Crie um pedido.')
+        }
     }
 
     const handleSelectChangeProduct = (e) => {
