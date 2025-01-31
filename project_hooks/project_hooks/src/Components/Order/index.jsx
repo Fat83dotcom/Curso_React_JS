@@ -146,12 +146,18 @@ const OrderAppendItems = () => {
         }
     }, [categoryId, handleWarning])
 
-        console.log(productByCategory);
-    }, [categoryId, productByCategory])
-
-    const handleClickSearchProductByName = () => {
-
-    }
+    const handleClickSearchProductByName =useCallback(async () => {
+        const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
+        const productNameData = await handleSubmitGet(url)
+        if (productNameData.data) {
+            setProductByName(productNameData.data)
+            setProductByCategory([])
+            setProducts([])
+        } else {
+            handleWarning('Não encontrado.')
+            setProductByName([])
+        }
+    }, [productName, handleWarning])
 
     const handleClickAppendProduct = () => {
 
