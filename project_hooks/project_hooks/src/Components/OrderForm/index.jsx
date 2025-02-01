@@ -20,20 +20,17 @@ export const OrderForm = ({change, customId}) => {
         if (searchCustomer) {
             const url = `http://127.0.0.1:8000/search_customer/?search_name=${searchCustomer}`
             const data = await handleSubmitGet(url)
-            // console.log(data.msg);
-            if (data.msg === 'Sucesso.'){
-                setCustomerSearched(data.data)
+            console.log(data.msg);
+            console.log(data.response);
+            if (data.response === 200){
+                setCustomerSearched(data.data.data)
                 handleClearForm()
-                handleWarning(data.msg)
-                // console.log(data.data);
+                handleWarning(data.data.msg)
             }
-            if (data.msg === 'Not Found') {
+
+            if (data.response === 404) {
                 setCustomerSearched([])
-                handleWarning('Não Encontrado.')
-            }
-            if (data.msg === 'TypeError: Failed to fetch') {
-                setCustomerSearched([])
-                handleWarning('Verificar conexão com a internet.')
+                handleWarning(data.data.msg)
             }
         } else {
             handleWarning('Campo vazio.')
