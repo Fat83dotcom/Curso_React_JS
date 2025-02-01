@@ -7,15 +7,15 @@ export const handleSubmitPost = async (url, formData) => {
             },
             body: JSON.stringify(formData),
         })
-
         if (response.ok) {
             const data = await response.json();
             console.log(data, response.status);
-            return {msg: data.msg, response: response.status}
+            return {data, response: response.status}
 
         } else {
+            const data = await response.json();
             console.error("Erro ao criar o item:", {response: response.status});
-            return  {msg: `Erro ao criar o item: ${response.statusText}`}
+            return  {data, response: response.status}
         }
     } catch (error) {
         console.error("Erro na requisição:", error)
@@ -28,21 +28,16 @@ export const handleSubmitGet = async (url) => {
         const response = await fetch(url, {
             method: 'GET',
         })
-
         if (response.ok) {
             const data = await response.json();
-            console.log("Sucesso:", data)
-
-
-            return {data: data, msg: 'Sucesso.'}
-
+            console.log(data)
+            return {data, response: response.status}
         } else {
+            const data = await response.json();
             console.error("Erro", response);
-            console.log(response.status);
-            return {msg: `${response.statusText}`}
+            return {data, response: response.status}
         }
     } catch (error) {
-        console.error("Erro na requisição:", error)
-        return {msg: `${error}`}
+        console.error( `Verifique sua conexão com a internet.${error}`)
     }
 }
