@@ -24,7 +24,8 @@ export const Order = ({customerId, change}) => {
     const handleFetchSearchOrder = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_order/?search_order=${customerId}`
         const data = await handleSubmitGet(url)
-        if (data.data) {
+        console.log(data.data);
+        if (data.response === 200) {
             return data.data
         }
         return {}
@@ -37,16 +38,17 @@ export const Order = ({customerId, change}) => {
             body
         )
 
-        if (data.data) {
+        if (data.response === 200) {
             const orderData = await handleFetchSearchOrder()
-            setOrderData([orderData])
+            setOrderData([orderData.data])
             setOrderId(orderData.id)
             handleWarning(data.msg)
         } else {
+            handleWarning(data.data.msg)
             const orderDataUnauthorized = await handleFetchSearchOrder()
-            setOrderId(orderDataUnauthorized.pk)
-            setOrderSearchData([orderDataUnauthorized])
-            handleWarning(data.msg)
+            setOrderId(orderDataUnauthorized.data.pk)
+            setOrderData([orderDataUnauthorized.data])
+            setOrderSearchData([orderDataUnauthorized.data])
         }
     }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
