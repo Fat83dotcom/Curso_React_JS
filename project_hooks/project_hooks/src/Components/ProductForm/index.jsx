@@ -41,7 +41,6 @@ export const ProductForm = () => {
 
     const productCategoryData = async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-        console.log(data.data);
         setProductCategory(data.data)
     }
 
@@ -49,6 +48,8 @@ export const ProductForm = () => {
         if (productInput.name && productInput.price && productInput.quantity) {
             const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", productInput)
             handleClearProductForm()
+            console.log(war.msg);
+
             handleWarning(war.msg)
         }else {
             handleWarning('Faltam Dados no Formulario')
@@ -70,9 +71,7 @@ export const ProductForm = () => {
     }, [handleWarning, productCategoryInput, handleClearCategoryProductForm])
 
     const handleChangeProduct = (e) => {
-        const { name, value } = e.target;
-        console.log(productInput);
-
+        const { name, value } = e.target
         setProductInput(
             (prevData) => ({...prevData, [name]: value,})
         )
