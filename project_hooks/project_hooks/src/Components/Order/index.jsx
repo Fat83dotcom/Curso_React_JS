@@ -74,19 +74,3 @@ Order.propTypes = {
     customerId: P.string,
     change: P.func,
 }
-
-OrderAppendItems.propTypes ={
-    orderId: P.number
-}
-
-OrderListItems.propTypes = {
-    orderId: P.number,
-    product: P.array,
-}
-
-OrderDisplay.propTypes = {
-    handleFetchOrder: P.func,
-    orderData: P.array,
-    orderSearchData: P.array,
-    handleChangePage: P.func
-}
