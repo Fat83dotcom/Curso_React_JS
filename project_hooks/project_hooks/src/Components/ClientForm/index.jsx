@@ -47,7 +47,9 @@ export const ClientForm = () => {
                 "http://127.0.0.1:8000/register_customers/", formData
             )
             handleClearForm()
-            handleWarning(war.msg)
+            console.log(war.data.msg);
+
+            handleWarning(war.data.msg)
         } else {
             handleWarning('Faltam Dados no Formulario')
         }
