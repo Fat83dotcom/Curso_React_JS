@@ -1,6 +1,6 @@
 import P from "prop-types"
 
-export const SelectCategory = ({handleChangeProduct: handleChangeCategory, productCategory}) => {
+export const SelectCategory = ({handleChangeProduct: handleChangeCategory, productCategory=[]}) => {
     return (
         <select onChange={handleChangeCategory} name="category" id="category" >
             {productCategory.map((cat) => {
