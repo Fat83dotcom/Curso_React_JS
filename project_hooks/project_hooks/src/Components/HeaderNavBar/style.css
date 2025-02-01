@@ -16,16 +16,19 @@
     justify-content: space-between;
 }
 .header span {
+    color: #111;
     list-style: none;
     padding: 5px;
     border-radius: 5px;
-    border: solid 1px #333;
+    border: solid 1px #111;
     margin: 10px;
 }
 .header span:hover {
     cursor: pointer;
-    background-color: #ccc;
+    background-color: #222;
+    color: #ddd;
 }
 .header span:active{
-    background-color: #bbb;
+    background-color: #333;
+    color: #ddd;
 }
