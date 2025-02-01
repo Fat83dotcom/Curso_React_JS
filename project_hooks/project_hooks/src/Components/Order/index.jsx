@@ -110,7 +110,9 @@ const OrderAppendItems = ({orderId}) => {
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-        setProductCategory(data.data)
+        console.log(data.data.data);
+
+        setProductCategory(data.data.data)
     }, [])
 
     const handleFetchProducts = useCallback(async () => {
@@ -118,7 +120,7 @@ const OrderAppendItems = ({orderId}) => {
         console.log(productData.data);
 
         if (productData.data) {
-            setProducts(productData.data)
+            setProducts(productData.data.data)
             setProductByCategory([])
         } else {
             setProducts([])
@@ -133,10 +135,10 @@ const OrderAppendItems = ({orderId}) => {
     const handleClickSearchProductByCategory = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
         const categoryData = await handleSubmitGet(url)
-        console.log(categoryData.data);
+        console.log(categoryData.data.data);
 
-        if (categoryData.data) {
-            setProductByCategory(categoryData.data)
+        if (categoryData.data.data) {
+            setProductByCategory(categoryData.data.data)
             setProductByName([])
             setProducts([])
         } else {
@@ -148,8 +150,8 @@ const OrderAppendItems = ({orderId}) => {
     const handleClickSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
-        if (productNameData.data) {
-            setProductByName(productNameData.data)
+        if (productNameData.data.data) {
+            setProductByName(productNameData.data.data)
             setProductByCategory([])
             setProducts([])
         } else {
@@ -159,10 +161,7 @@ const OrderAppendItems = ({orderId}) => {
     }, [productName, handleWarning])
 
     const handleClickAppendProduct = async (e) => {
-        // console.log(orderId);
-
         if (orderId !== 0) {
-            console.log(orderId);
             const row = e.currentTarget
 
             const id = row.children[0].innerText;
@@ -290,7 +289,7 @@ const OrderAppendItems = ({orderId}) => {
             </div>
         </div>
         <div>
-            <OrderListItems idOrder={1} product={chosenProduct}/>
+            <OrderListItems product={chosenProduct}/>
         </div>
         </>
     )
