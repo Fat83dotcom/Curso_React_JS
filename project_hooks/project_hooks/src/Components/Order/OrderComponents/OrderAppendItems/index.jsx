@@ -94,10 +94,10 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
             const product = {
                 id,
+                orderId : orderId,
                 name,
                 price,
                 quantity: 1,
-                orderId : orderId,
             };
             console.log(orderId);
 
@@ -112,7 +112,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
             if (saveProductsOnDB.response === 200) {
                 console.log(saveProductsOnDB.response);
-                setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
+                // setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
+                getProductsByOrder(orderId)
             }
             console.log(saveProductsOnDB.msg);
         }
