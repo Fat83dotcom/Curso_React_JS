@@ -28,9 +28,9 @@ export const OrderListItems = ({product}) => {
                             {product && product.map((data, index) => {
                                 return (
                                     <tr  className='click-product' key={index}>
-                                        <td><a>{data.orderId}</a></td>
-                                        <td><a>{data.id}</a></td>
-                                        <td>{data.name}</td>
+                                        <td><a>{data.id_order}</a></td>
+                                        <td><a>{data.id_product}</a></td>
+                                        <td>{data.product_name}</td>
                                         <td>{data.price}</td>
                                         <td>{data.quantity}</td>
                                     </tr>
