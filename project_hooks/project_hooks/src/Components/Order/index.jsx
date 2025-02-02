@@ -31,7 +31,7 @@ export const Order = ({customerId, change}) => {
         return {}
     }, [customerId])
 
-    const handleFetchOrder = useCallback(async () => {
+    const handleFetchOrder = useCallback(async (msgCondition) => {
         const body = {id_customer: customerId, total: 0}
         const data = await handleSubmitPost(
             'http://127.0.0.1:8000/create_order/',
@@ -44,7 +44,7 @@ export const Order = ({customerId, change}) => {
             setOrderId(orderData.id)
             handleWarning(data.msg)
         } else {
-            handleWarning(data.data.msg)
+            {msgCondition && handleWarning(data.data.msg)}
             const orderDataUnauthorized = await handleFetchSearchOrder()
             setOrderId(orderDataUnauthorized.data.pk)
             setOrderData([orderDataUnauthorized.data])
@@ -52,18 +52,26 @@ export const Order = ({customerId, change}) => {
         }
     }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
+    const handleTriggerProductItems = (getitems) =>{
+        getitems()
+    }
+
     return (
         <>
             <Warning warning={warning}/>
             <button onClick={handleFetchOrder}>Criar Pedido</button>
             <div className='container-order-main'>
                 <OrderDisplay
-                    handleFetchOrder={handleFetchOrder}
+                    handleFetchOrder={() => handleFetchOrder(true)}
                     orderData={orderData}
                     orderSearchData={orderSearchData}
                     handleChangePage={handleChangePage}
                 />
-                <OrderAppendItems orderId={orderId}/>
+                <OrderAppendItems
+                    triggerItems={(trigger) => handleTriggerProductItems(trigger)}
+                    orderId={orderId}
+                    handleFetchOrder={() => handleFetchOrder(false)}
+                />
             </div>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
         </>
