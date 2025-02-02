@@ -23,7 +23,7 @@ export const OrderDisplay = ({orderData, orderSearchData}) => {
                                         <tr key={data.pk}>
                                             <td><a>{data.pk}</a></td>
                                             <td>{data.date}</td>
-                                            <td>{data.total}</td>
+                                            <td>{data.total.toFixed(2)}</td>
                                             <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
                                         </tr>
                                     )
@@ -74,7 +74,7 @@ export const OrderDisplay = ({orderData, orderSearchData}) => {
                                             <td>{data.customer_second_name}</td>
                                             <td><a>{data.pk}</a></td>
                                             <td>{data.date}</td>
-                                            <td>{data.total}</td>
+                                            <td>{data.total.toFixed(2)}</td>
                                             <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
                                         </tr>
                                     )
