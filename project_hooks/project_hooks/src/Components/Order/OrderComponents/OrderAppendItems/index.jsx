@@ -70,7 +70,21 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         }
     }, [productName, handleWarning])
 
+    const getProductsByOrder = useCallback(async (order_id) => {
+        const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
+        const product = await handleSubmitGet(url)
+        if (product.response === 200) {
+            setWarning(product.data.msg)
+            console.log(product.data.data);
+            setChosenProduct(product.data.data)
+        } else {
+            setWarning(product.data.msg)
+            return []
+        }
+    }, [])
+
     const handleClickAppendProduct = async (e) => {
+        handleFetchOrder()
         if (orderId !== 0) {
             const row = e.currentTarget
 
