@@ -5,7 +5,7 @@ import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
 import { OrderListItems } from '../OrderListItems'
 import { Warning } from '../../../Warning'
 
-export const OrderAppendItems = ({orderId}) => {
+export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
     const [chosenProduct, setChosenProduct] = useState([])
     const [productCategory, setProductCategory] = useState([])
@@ -118,6 +118,11 @@ export const OrderAppendItems = ({orderId}) => {
         setProductName(value)
     }
 
+    useEffect(()=> {
+        getProductsByOrder(orderId)
+    }, [triggerItems, orderId])
+
+
     useEffect(() => {
         productCategoryData()
     }, [productCategoryData])
@@ -208,5 +213,7 @@ export const OrderAppendItems = ({orderId}) => {
 }
 
 OrderAppendItems.propTypes ={
-    orderId: P.number
+    orderId: P.number,
+    triggerItems: P.func,
+    handleFetchOrder: P.func
 }
