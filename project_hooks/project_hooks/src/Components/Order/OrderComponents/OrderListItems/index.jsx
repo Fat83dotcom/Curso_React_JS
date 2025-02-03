@@ -16,7 +16,6 @@ export const OrderListItems = (
         setTimeout(() => {setWarning('')}, 3000)
     }, [setWarning])
 
-
     const handleDeleteItem = async (index) =>{
        console.log(productList[index].id_order_items);
        const id_item = productList[index].id_order_items
@@ -34,12 +33,10 @@ export const OrderListItems = (
        console.log(result.data.msg);
     }
 
-
     useEffect(() =>{
         console.log(product);
         {product && setProductList(product)}
     }, [product])
-
 
     return (
         <div className='container-items'>
