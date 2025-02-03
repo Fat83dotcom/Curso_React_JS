@@ -1,6 +1,7 @@
 import P from 'prop-types'
 import { useEffect, useState, useCallback } from 'react';
 import { handleSubmitDelete } from '../../../../Utils/ApiCalls';
+import { Warning } from '../../../Warning';
 
 
 export const OrderListItems = (
@@ -31,8 +32,6 @@ export const OrderListItems = (
        reloadOrderTrigger()
        handleWarning(result.data)
        console.log(result.data.msg);
-
-
     }
 
 
@@ -45,7 +44,8 @@ export const OrderListItems = (
     return (
         <div className='container-items'>
             <h3>Lista de itens</h3>
-
+            <Warning warning={warning}/>
+            <h5>Clique nos itens para excluir.</h5>
             <div className='center-tables'>
                 <table>
                     {productList.length === 0 && <tr className='click-product'><td>Pedido Sem Produtos</td></tr>}
