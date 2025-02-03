@@ -3,18 +3,31 @@ import { Warning } from '../../../Warning'
 import { OrderListItems } from '../OrderListItems'
 import { SelectCategory } from '../../../CategorySelect'
 import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useReducer } from 'react'
+
+const initialState = {
+    lastFuncProductCall: ''
+}
+
+function reducer(state, action) {
+    switch (action.type) {
+        case "SET_LAST_FUNC":
+            return {...state, lastFuncProductCall: action.payload}
+    }
+}
 
 export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
     const [chosenProduct, setChosenProduct] = useState([])
-    const [productCategory, setProductCategory] = useState([])
 
-    const [productByName, setProductByName] = useState([])
-    const [productByCategory, setProductByCategory] = useState([])
+    const [productCategory, setProductCategory] = useState([])
 
     const [categoryId, setCategoryId] = useState('')
     const [productName, setProductName] = useState('')
+
+    // const [lastFuncProductCall, setLastFuncProductCall] = useState()
+
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const [warning, setWarning] = useState('')
 
@@ -26,43 +39,47 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const handleFetchProducts = useCallback(async () => {
         const productData = await handleSubmitGet('http://127.0.0.1:8000/get_products/')
 
+        // setLastFuncProductCall('handleFetchProducts')
+        dispatch({type: 'SET_LAST_FUNC', payload: 'handleFetchProducts'})
         if (productData.data) {
             setProducts(productData.data.data)
-            setProductByCategory([])
         } else {
             setProducts([])
         }
     }, [])
 
-    const handleWarning = useCallback((msg) => {
+    const handleWarning = useCallback(async (msg) => {
         setWarning(msg)
-        setTimeout(() => {setWarning('')}, 3000)
-    }, [setWarning])
+        await new Promise(() => setTimeout(() => {setWarning('')}, 3000))
+    }, [])
 
     const handleClickSearchProductByCategory = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
         const categoryData = await handleSubmitGet(url)
-        console.log(categoryData.data.data);
+
+        // setLastFuncProductCall('handleClickSearchProductByCategory')
+        dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByCategory'})
 
         if (categoryData.data.data) {
-            setProductByCategory(categoryData.data.data)
-            setProductByName([])
-            setProducts([])
+            setProducts(categoryData.data.data)
+            handleWarning(categoryData.data.msg)
         } else {
-            setProductByCategory([])
+            handleWarning(categoryData.data.msg)
+            setProducts([])
         }
-    }, [categoryId])
+    }, [categoryId, handleWarning])
 
     const handleClickSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
+        
+        // setLastFuncProductCall('handleClickSearchProductByName')
+        dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByName'})
 
         if (productNameData.data.data) {
-            setProductByName(productNameData.data.data)
-            setProductByCategory([])
-            setProducts([])
+            setProducts(productNameData.data.data)
         } else {
-            setProductByName([])
+            setProducts([])
         }
     }, [productName])
 
@@ -77,7 +94,25 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         }
     }, [])
 
-    const handleClickAppendProduct = async (e) => {
+    const callLastProductFunc = useCallback(async () => {
+        // {lastFuncProductCall === 'handleFetchProducts' && handleFetchProducts()}
+        // {lastFuncProductCall === 'handleClickSearchProductByCategory' && handleClickSearchProductByCategory()}
+        // {lastFuncProductCall === 'handleClickSearchProductByName' && handleClickSearchProductByName()}
+        switch (state.lastFuncProductCall) {
+            case 'handleFetchProducts':
+                await handleFetchProducts()
+                break;
+            case 'handleClickSearchProductByCategor':
+                await handleClickSearchProductByCategory()
+                break;
+            case ' handleClickSearchProductByName':
+                await  handleClickSearchProductByName()
+                break;
+        }
+    }, [handleFetchProducts, handleClickSearchProductByCategory, handleClickSearchProductByName, state.lastFuncProductCall])
+
+
+    const handleClickAppendProduct = useCallback(async (e) => {
         if (orderId !== 0) {
             const row = e.currentTarget
 
@@ -103,14 +138,15 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             handleWarning(saveProductsOnDB.data.msg)
 
             if (saveProductsOnDB.response === 200) {
-                await getProductsByOrder(orderId)
+
+                await callLastProductFunc() // Recarrega sempre a ultima função de busca de produtos chamada
                 handleFetchOrder() // Recarrega os pedidos no elemento Order
-                await handleFetchProducts() // Recarrega a lista de produtos neste elemento
             }
         } else {
             handleWarning('Crie um pedido.')
         }
-    }
+    }, [handleFetchOrder, handleWarning, orderId, callLastProductFunc])
+
 
     const handleSelectChangeProduct = (e) => {
         const value = e.target.value
@@ -122,18 +158,20 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         setProductName(value)
     }
 
-    useEffect(()=> {
-        getProductsByOrder(orderId)
+    useEffect(() => {
+        const fetch = async() => {
+            await getProductsByOrder(orderId)
+        }
+        fetch()
     }, [triggerItems,getProductsByOrder, orderId])
-
 
     useEffect(() => {
         productCategoryData()
     }, [productCategoryData])
 
-    useEffect(() =>{
+    useEffect(() => {
         handleFetchProducts()
-    }, [handleFetchProducts])
+    }, [])
 
     return (
         <>
@@ -183,26 +221,6 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                                     )
                                 }
                                )}
-                               {productByCategory && productByCategory.map((data) => {
-                                return (
-                                    <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
-                                        <td><a>{data.id}</a></td>
-                                        <td>{data.name}</td>
-                                        <td>{data.price}</td>
-                                        <td>{data.quantity}</td>
-                                    </tr>
-                                )
-                               })}
-                                {productByName && productByName.map((data) => {
-                                    return (
-                                        <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
-                                            <td><a>{data.id}</a></td>
-                                            <td>{data.name}</td>
-                                            <td>{data.price}</td>
-                                            <td>{data.quantity}</td>
-                                        </tr>
-                                    )
-                                })}
                             </tbody>
                         </table>
                     </div>
