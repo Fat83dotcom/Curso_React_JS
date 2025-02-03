@@ -24,7 +24,6 @@ export const Order = ({customerId, change}) => {
     const handleFetchSearchOrder = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_order/?search_order=${customerId}`
         const data = await handleSubmitGet(url)
-        console.log(data.data);
         if (data.response === 200) {
             return data.data
         }
@@ -42,7 +41,7 @@ export const Order = ({customerId, change}) => {
             const orderData = await handleFetchSearchOrder()
             setOrderData([orderData.data])
             setOrderId(orderData.id)
-            handleWarning(data.msg)
+            await handleWarning(data.msg)
         } else {
             {msgCondition && handleWarning(data.data.msg)}
             const orderDataUnauthorized = await handleFetchSearchOrder()
@@ -51,6 +50,12 @@ export const Order = ({customerId, change}) => {
             setOrderSearchData([orderDataUnauthorized.data])
         }
     }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
+
+    const handleUpdateOrder = useCallback( async () => {
+        const orderUpdate = await handleFetchSearchOrder()
+        setOrderData([orderUpdate.data])
+        setOrderSearchData([orderUpdate.data])
+    }, [handleFetchSearchOrder])
 
     const handleTriggerProductItems = (getitems) =>{
         getitems()
@@ -70,7 +75,7 @@ export const Order = ({customerId, change}) => {
                 <OrderAppendItems
                     triggerItems={(trigger) => handleTriggerProductItems(trigger)}
                     orderId={orderId}
-                    handleFetchOrder={() => handleFetchOrder(false)}
+                    handleFetchOrder={() => handleUpdateOrder()}
                 />
             </div>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
