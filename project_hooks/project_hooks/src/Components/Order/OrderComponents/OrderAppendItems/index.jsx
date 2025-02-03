@@ -1,9 +1,9 @@
-import { SelectCategory } from '../../../CategorySelect'
 import P from 'prop-types'
-import { useState, useCallback, useEffect } from 'react'
-import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
-import { OrderListItems } from '../OrderListItems'
 import { Warning } from '../../../Warning'
+import { OrderListItems } from '../OrderListItems'
+import { SelectCategory } from '../../../CategorySelect'
+import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
+import { useState, useCallback, useEffect } from 'react'
 
 export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
@@ -20,14 +20,11 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
-        console.log(data.data.data);
-
         setProductCategory(data.data.data)
     }, [])
 
     const handleFetchProducts = useCallback(async () => {
         const productData = await handleSubmitGet('http://127.0.0.1:8000/get_products/')
-        console.log(productData.data);
 
         if (productData.data) {
             setProducts(productData.data.data)
@@ -52,39 +49,35 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             setProductByName([])
             setProducts([])
         } else {
-            handleWarning('Não encontrado.')
             setProductByCategory([])
         }
-    }, [categoryId, handleWarning])
+    }, [categoryId])
 
     const handleClickSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
+
         if (productNameData.data.data) {
             setProductByName(productNameData.data.data)
             setProductByCategory([])
             setProducts([])
         } else {
-            handleWarning('Não encontrado.')
             setProductByName([])
         }
-    }, [productName, handleWarning])
+    }, [productName])
 
     const getProductsByOrder = useCallback(async (order_id) => {
         const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
         const product = await handleSubmitGet(url)
+
         if (product.response === 200) {
-            setWarning(product.data.msg)
-            console.log(product.data.data);
             setChosenProduct(product.data.data)
         } else {
-            setWarning(product.data.msg)
-            return []
+            setChosenProduct([])
         }
     }, [])
 
     const handleClickAppendProduct = async (e) => {
-        handleFetchOrder()
         if (orderId !== 0) {
             const row = e.currentTarget
 
@@ -99,7 +92,6 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                 price,
                 quantity: 1,
             };
-            console.log(orderId);
 
             const url = 'http://127.0.0.1:8000/append_items/'
             const body = {
@@ -108,16 +100,14 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                 quantity: product.quantity
             }
             const saveProductsOnDB = await handleSubmitPost(url, body)
-            handleWarning(saveProductsOnDB.msg)
+            handleWarning(saveProductsOnDB.data.msg)
 
             if (saveProductsOnDB.response === 200) {
-                console.log(saveProductsOnDB.response);
-                // setChosenProduct((chosenProduct) => ([...chosenProduct, product]))
-                getProductsByOrder(orderId)
+                await getProductsByOrder(orderId)
+                handleFetchOrder() // Recarrega os pedidos no elemento Order
+                await handleFetchProducts() // Recarrega a lista de produtos neste elemento
             }
-            console.log(saveProductsOnDB.msg);
-        }
-        else {
+        } else {
             handleWarning('Crie um pedido.')
         }
     }
@@ -125,7 +115,6 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const handleSelectChangeProduct = (e) => {
         const value = e.target.value
         setCategoryId(value)
-        console.log(categoryId);
     }
 
     const handleInputChangeProduct = (e) => {
@@ -135,7 +124,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     useEffect(()=> {
         getProductsByOrder(orderId)
-    }, [triggerItems, orderId])
+    }, [triggerItems,getProductsByOrder, orderId])
 
 
     useEffect(() => {
@@ -221,7 +210,12 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             </div>
         </div>
         <div>
-            <OrderListItems product={chosenProduct}/>
+            <OrderListItems
+                product={chosenProduct}
+                reloadListItemsTrrigger={async(order_id) => await getProductsByOrder(order_id)}
+                reloadProductstrigger={async() => await handleFetchProducts()}
+                reloadOrderTrigger={() => handleFetchOrder()}
+            />
         </div>
         </>
     )
