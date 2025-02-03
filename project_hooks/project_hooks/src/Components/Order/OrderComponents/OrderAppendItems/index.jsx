@@ -72,16 +72,18 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const handleClickSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
-        
+
         // setLastFuncProductCall('handleClickSearchProductByName')
         dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByName'})
 
         if (productNameData.data.data) {
             setProducts(productNameData.data.data)
+            handleWarning(productNameData.data.msg)
         } else {
             setProducts([])
+            handleWarning(productNameData.data.msg)
         }
-    }, [productName])
+    }, [productName, handleWarning])
 
     const getProductsByOrder = useCallback(async (order_id) => {
         const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
@@ -171,7 +173,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     useEffect(() => {
         handleFetchProducts()
-    }, [])
+    }, [handleFetchProducts])
 
     return (
         <>
