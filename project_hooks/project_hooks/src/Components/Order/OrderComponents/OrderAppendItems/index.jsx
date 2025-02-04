@@ -5,16 +5,16 @@ import { SelectCategory } from '../../../CategorySelect'
 import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
 import { useState, useCallback, useEffect, useReducer } from 'react'
 
-const initialState = {
-    lastFuncProductCall: ''
-}
+// const initialState = {
+//     lastFuncProductCall: ''
+// }
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case "SET_LAST_FUNC":
-            return {...state, lastFuncProductCall: action.payload}
-    }
-}
+// const reducer = (state, action) => {
+//     switch (action.type) {
+//         case "SET_LAST_FUNC":
+//             return {...state, lastFuncProductCall: action.payload}
+//     }
+// }
 
 export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
@@ -25,11 +25,17 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [categoryId, setCategoryId] = useState('')
     const [productName, setProductName] = useState('')
 
-    // const [lastFuncProductCall, setLastFuncProductCall] = useState()
+    const [lastFuncProductCall, setLastFuncProductCall] = useState()
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [allOrders, setAllOrders] = useState([])
+
+    // const [state, dispatch] = useReducer(reducer, initialState)
 
     const [warning, setWarning] = useState('')
+
+    const handleGetAllOrders = () => {
+        
+    }
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
@@ -39,14 +45,14 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const handleFetchProducts = useCallback(async () => {
         const productData = await handleSubmitGet('http://127.0.0.1:8000/get_products/')
 
-        // setLastFuncProductCall('handleFetchProducts')
-        dispatch({type: 'SET_LAST_FUNC', payload: 'handleFetchProducts'})
+        setLastFuncProductCall('handleFetchProducts')
+        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleFetchProducts'})
         if (productData.data) {
             setProducts(productData.data.data)
         } else {
             setProducts([])
         }
-    }, [])
+    }, [setLastFuncProductCall])
 
     const handleWarning = useCallback(async (msg) => {
         setWarning(msg)
@@ -57,8 +63,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
         const categoryData = await handleSubmitGet(url)
 
-        // setLastFuncProductCall('handleClickSearchProductByCategory')
-        dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByCategory'})
+        setLastFuncProductCall('handleClickSearchProductByCategory')
+        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByCategory'})
 
         if (categoryData.data.data) {
             setProducts(categoryData.data.data)
@@ -67,14 +73,14 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             handleWarning(categoryData.data.msg)
             setProducts([])
         }
-    }, [categoryId, handleWarning])
+    }, [categoryId, handleWarning, setLastFuncProductCall])
 
     const handleClickSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
 
-        // setLastFuncProductCall('handleClickSearchProductByName')
-        dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByName'})
+        setLastFuncProductCall('handleClickSearchProductByName')
+        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByName'})
 
         if (productNameData.data.data) {
             setProducts(productNameData.data.data)
@@ -83,7 +89,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             setProducts([])
             handleWarning(productNameData.data.msg)
         }
-    }, [productName, handleWarning])
+    }, [productName, handleWarning, setLastFuncProductCall])
 
     const getProductsByOrder = useCallback(async (order_id) => {
         const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
@@ -97,21 +103,24 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     }, [])
 
     const callLastProductFunc = useCallback(async () => {
-        // {lastFuncProductCall === 'handleFetchProducts' && handleFetchProducts()}
-        // {lastFuncProductCall === 'handleClickSearchProductByCategory' && handleClickSearchProductByCategory()}
-        // {lastFuncProductCall === 'handleClickSearchProductByName' && handleClickSearchProductByName()}
-        switch (state.lastFuncProductCall) {
-            case 'handleFetchProducts':
-                await handleFetchProducts()
-                break;
-            case 'handleClickSearchProductByCategor':
-                await handleClickSearchProductByCategory()
-                break;
-            case ' handleClickSearchProductByName':
-                await  handleClickSearchProductByName()
-                break;
-        }
-    }, [handleFetchProducts, handleClickSearchProductByCategory, handleClickSearchProductByName, state.lastFuncProductCall])
+        {lastFuncProductCall === 'handleFetchProducts' && handleFetchProducts()}
+        {lastFuncProductCall === 'handleClickSearchProductByCategory' && handleClickSearchProductByCategory()}
+        {lastFuncProductCall === 'handleClickSearchProductByName' && handleClickSearchProductByName()}
+        // switch (state.lastFuncProductCall) {
+        //     case 'handleFetchProducts':
+        //         await handleFetchProducts()
+        //         break;
+        //     case 'handleClickSearchProductByCategor':
+        //         await handleClickSearchProductByCategory()
+        //         break;
+        //     case ' handleClickSearchProductByName':
+        //         await  handleClickSearchProductByName()
+        //         break;
+        // }
+    }, [
+        handleFetchProducts, handleClickSearchProductByCategory,
+        handleClickSearchProductByName,lastFuncProductCall
+    ])
 
 
     const handleClickAppendProduct = useCallback(async (e) => {
