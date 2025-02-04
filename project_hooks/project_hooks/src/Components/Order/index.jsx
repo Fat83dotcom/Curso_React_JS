@@ -5,12 +5,14 @@ import { handleSubmitGet, handleSubmitPatch, handleSubmitPost } from '../../Util
 import { Warning } from '../Warning'
 import { OrderDisplay } from './OrderComponents/OrderDisplay'
 import { OrderAppendItems } from './OrderComponents/OrderAppendItems'
+import { useEffect } from 'react'
 
 export const Order = ({customerId, change}) => {
     const [warning, setWarning] = useState('')
     const [orderId, setOrderId] = useState(0)
     const [orderData, setOrderData] = useState([])
     const [orderSearchData, setOrderSearchData] = useState([])
+    const [allOrders, setAllOrders] = useState([])
 
     const handleChangePage = useCallback(() => {
         change('orderForm')
@@ -51,6 +53,16 @@ export const Order = ({customerId, change}) => {
         }
     }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
+    const handleGetAllOrders = useCallback(async () => {
+        const url = `http://127.0.0.1:8000/all_orders_from_customer/?id_customer=${customerId}`
+
+        const orders = await handleSubmitGet(url)
+        console.log(orders);
+
+        {orders.response === 200 ? setAllOrders(orders.data.data) : setAllOrders([])}
+        {orders.response === 200 && handleFetchOrder()}
+    }, [customerId, handleFetchOrder])
+
     const handleCloseOrder = useCallback(async () => {
         if (orderId === 0) {
             alert('Crie um pedido.')
@@ -62,18 +74,28 @@ export const Order = ({customerId, change}) => {
                 order_status: false
             }
             {choice && await handleSubmitPatch(url, body)}
+            {choice && await handleGetAllOrders()}
         }
-    }, [orderId])
+    }, [orderId, handleGetAllOrders])
 
-    const handleUpdateOrder = useCallback( async () => {
+    const handleUpdateOrder = useCallback(async () => {
         const orderUpdate = await handleFetchSearchOrder()
         setOrderData([orderUpdate.data])
         setOrderSearchData([orderUpdate.data])
-    }, [handleFetchSearchOrder])
+        await handleGetAllOrders()
+
+    }, [handleFetchSearchOrder, handleGetAllOrders])
 
     const handleTriggerProductItems = (getitems) =>{
         getitems()
     }
+
+    useEffect(() => {
+        const fetch = async () => {
+            await handleGetAllOrders()
+        }
+        fetch()
+    }, [])
 
     return (
         <>
@@ -81,16 +103,18 @@ export const Order = ({customerId, change}) => {
             <button onClick={handleFetchOrder}>Criar Pedido</button>
             <div className='container-order-main'>
                 <OrderDisplay
-                    handleCloseOrder={() => handleCloseOrder()}
-                    handleFetchOrder={() => handleFetchOrder(true)}
                     orderData={orderData}
+                    orderAllData={allOrders}
                     orderSearchData={orderSearchData}
                     handleChangePage={handleChangePage}
+                    handleCloseOrder={() => handleCloseOrder()}
+                    handleFetchOrder={() => handleFetchOrder(true)}
                 />
                 <OrderAppendItems
-                    triggerItems={(trigger) => handleTriggerProductItems(trigger)}
                     orderId={orderId}
+                    idCustomer={customerId}
                     handleFetchOrder={() => handleUpdateOrder()}
+                    triggerItems={(trigger) => handleTriggerProductItems(trigger)}
                 />
             </div>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
