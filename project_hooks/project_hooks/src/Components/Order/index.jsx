@@ -57,7 +57,6 @@ export const Order = ({customerId, change}) => {
         const url = `http://127.0.0.1:8000/all_orders_from_customer/?id_customer=${customerId}`
 
         const orders = await handleSubmitGet(url)
-        console.log(orders);
 
         {orders.response === 200 ? setAllOrders(orders.data.data) : setAllOrders([])}
         {orders.response === 200 && handleFetchOrder()}
@@ -83,10 +82,9 @@ export const Order = ({customerId, change}) => {
         setOrderData([orderUpdate.data])
         setOrderSearchData([orderUpdate.data])
         await handleGetAllOrders()
-
     }, [handleFetchSearchOrder, handleGetAllOrders])
 
-    const handleTriggerProductItems = (getitems) =>{
+    const handleTriggerProductItems = (getitems) => {
         getitems()
     }
 
