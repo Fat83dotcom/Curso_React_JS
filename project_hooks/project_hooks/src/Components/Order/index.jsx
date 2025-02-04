@@ -1,7 +1,7 @@
 import './style.css'
 import P from 'prop-types'
 import { useState, useCallback} from 'react'
-import { handleSubmitGet, handleSubmitPost } from '../../Utils/ApiCalls'
+import { handleSubmitGet, handleSubmitPatch, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { OrderDisplay } from './OrderComponents/OrderDisplay'
 import { OrderAppendItems } from './OrderComponents/OrderAppendItems'
@@ -51,6 +51,20 @@ export const Order = ({customerId, change}) => {
         }
     }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
+    const handleCloseOrder = useCallback(async () => {
+        if (orderId === 0) {
+            alert('Crie um pedido.')
+        } else {
+            const choice = window.confirm('Após está ação, não será possivel adicionar mais produtos, deseja continuar?')
+            const url = `http://127.0.0.1:8000/close_order/`
+            const body = {
+                id: orderId,
+                order_status: false
+            }
+            {choice && await handleSubmitPatch(url, body)}
+        }
+    }, [orderId])
+
     const handleUpdateOrder = useCallback( async () => {
         const orderUpdate = await handleFetchSearchOrder()
         setOrderData([orderUpdate.data])
@@ -67,6 +81,7 @@ export const Order = ({customerId, change}) => {
             <button onClick={handleFetchOrder}>Criar Pedido</button>
             <div className='container-order-main'>
                 <OrderDisplay
+                    handleCloseOrder={() => handleCloseOrder()}
                     handleFetchOrder={() => handleFetchOrder(true)}
                     orderData={orderData}
                     orderSearchData={orderSearchData}
