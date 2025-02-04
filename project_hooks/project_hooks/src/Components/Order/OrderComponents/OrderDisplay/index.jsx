@@ -1,6 +1,6 @@
 import P from 'prop-types'
 
-export const OrderDisplay = ({orderData, orderSearchData, handleCloseOrder}) => {
+export const OrderDisplay = ({orderData, orderAllData, handleCloseOrder}) => {
     return (
         <>
             <div className='container-order'>
@@ -52,15 +52,12 @@ export const OrderDisplay = ({orderData, orderSearchData, handleCloseOrder}) => 
                                 })}
                             </tbody>
                         </table>
-
                     </div>
                     <div className='center-tables'>
                     <h3>Pedidos do Cliente</h3>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Nome</th>
-                                    <th>Sobrenome</th>
                                     <th>Código Pedido</th>
                                     <th>Data</th>
                                     <th>Valor Total</th>
@@ -68,12 +65,10 @@ export const OrderDisplay = ({orderData, orderSearchData, handleCloseOrder}) => 
                                 </tr>
                             </thead>
                             <tbody>
-                                {orderSearchData ? orderSearchData.map((data) => {
+                                {orderAllData ? orderAllData.map((data) => {
                                     return (
                                         <tr key={data.pk}>
-                                            <td>{data.customer_name}</td>
-                                            <td>{data.customer_second_name}</td>
-                                            <td><a>{data.pk}</a></td>
+                                            <td><a>{data.id}</a></td>
                                             <td>{data.date}</td>
                                             <td>{data.total.toFixed(2)}</td>
                                             <td>{data.order_status ? 'Aberto' : 'Fechado'}</td>
@@ -92,7 +87,7 @@ export const OrderDisplay = ({orderData, orderSearchData, handleCloseOrder}) => 
 OrderDisplay.propTypes = {
     handleFetchOrder: P.func,
     orderData: P.array,
-    orderSearchData: P.array,
     handleChangePage: P.func,
-    handleCloseOrder: P.func
+    handleCloseOrder: P.func,
+    orderAllData: P.array
 }
