@@ -1,11 +1,11 @@
-export const handleSubmitPost = async (url, formData) => {
+export const handleSubmitPost = async (url, body) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(body),
         })
         if (response.ok) {
             const data = await response.json();
