@@ -41,11 +41,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
         setLastFuncProductCall('handleFetchProducts')
         // dispatch({type: 'SET_LAST_FUNC', payload: 'handleFetchProducts'})
-        if (productData.data) {
-            setProducts(productData.data.data)
-        } else {
-            setProducts([])
-        }
+        {productData.data ? setProducts(productData.data.data) : setProducts([])}
+
     }, [setLastFuncProductCall])
 
     const handleWarning = useCallback(async (msg) => {
@@ -89,11 +86,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
         const product = await handleSubmitGet(url)
 
-        if (product.response === 200) {
-            setChosenProduct(product.data.data)
-        } else {
-            setChosenProduct([])
-        }
+        {product.response === 200 ? setChosenProduct(product.data.data) : setChosenProduct([])}
     }, [])
 
     const callLastProductFunc = useCallback(async () => {
