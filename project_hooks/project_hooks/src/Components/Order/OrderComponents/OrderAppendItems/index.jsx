@@ -238,7 +238,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 }
 
 OrderAppendItems.propTypes ={
+    idCustomer: P.string,
     orderId: P.number,
     triggerItems: P.func,
-    handleFetchOrder: P.func
+    handleFetchOrder: P.func,
 }
