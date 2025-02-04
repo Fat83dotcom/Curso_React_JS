@@ -61,9 +61,7 @@ export const ClientForm = () => {
     }, [formData, handleClearForm, dispatch])
 
     const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            fetchCustomers()
-        }
+        {e.key === 'Enter' && fetchCustomers()}
     }
 
     const clearButton = useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])
