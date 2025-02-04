@@ -5,9 +5,10 @@ import { ClearButton } from '../ClearButton'
 import { handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { useCallback } from 'react'
+import { useDispatch } from "react-redux"
+import { changeWarning } from "../../features/warning/warningSlice"
 
 export const ClientForm = () => {
-    const [registerStatus, setRegisterStatus] = useState('')
 
     const inputCustomerName = useRef(null)
 
@@ -21,10 +22,7 @@ export const ClientForm = () => {
         }
     )
 
-    const handleWarning = useCallback(async (msg) => {
-        setRegisterStatus(msg)
-        await new Promise(() => setTimeout(() => {setRegisterStatus('')}, 3000))
-    }, [])
+    const dispatch = useDispatch()
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -44,29 +42,35 @@ export const ClientForm = () => {
         {inputCustomerName.current.focus()}
     }, [])
 
-    const handleClick = useCallback(async () => {
+    const fetchCustomers = useCallback(async () => {
         if ( formData.name && formData.second_name &&
             formData.email && formData.phone && formData.address) {
-                const war = await handleSubmitPost(
-                    "http://127.0.0.1:8000/register_customers/", formData
-                )
+            const war = await handleSubmitPost(
+                "http://127.0.0.1:8000/register_customers/", formData
+            )
+            if (war.response === 201) {
+                dispatch(changeWarning(war.data.msg))
                 handleClearForm()
-
-                handleWarning(war.data.msg)
+            } else {
+                dispatch(changeWarning(war.data.msg))
+            }
         } else {
-            handleWarning('Faltam Dados no Formulario')
+            dispatch(changeWarning('Faltam Dados no Formulario'))
             {inputCustomerName.current.focus()}
         }
-    }, [formData, handleClearForm, handleWarning])
+    }, [formData, handleClearForm, dispatch])
 
-    const handleKeyPress = async (e) => {
-        {e.key === 'Enter' && await handleClick()}
-        {e.key === 'Enter' && handleClearForm()}
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            fetchCustomers()
+        }
     }
 
+    const clearButton = useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])
+    const submitButton = useMemo(() => <ClientSubmitButton click={fetchCustomers}/>, [fetchCustomers])
     return (
         <>
-            <Warning warning={registerStatus}/>
+            <Warning/>
             <div className="client-form">
                 <label htmlFor="name">Nome</label>
                 <input ref={inputCustomerName} value={formData.name}
@@ -86,9 +90,8 @@ export const ClientForm = () => {
                     onKeyDown={handleKeyPress}
                 />
             </div>
-
-            {useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])}
-            {useMemo(() => <ClientSubmitButton click={handleClick}/>, [handleClick])}
+            {clearButton}
+            {submitButton}
         </>
     )
 }
