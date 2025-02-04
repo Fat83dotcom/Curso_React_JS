@@ -2,7 +2,7 @@ import P from 'prop-types'
 import { Warning } from '../../../Warning'
 import { OrderListItems } from '../OrderListItems'
 import { SelectCategory } from '../../../CategorySelect'
-import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
+import { handleSubmitGet, handleSubmitPatch, handleSubmitPost } from '../../../../Utils/ApiCalls'
 import { useState, useCallback, useEffect, useReducer } from 'react'
 
 // const initialState = {
@@ -27,15 +27,9 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     const [lastFuncProductCall, setLastFuncProductCall] = useState()
 
-    const [allOrders, setAllOrders] = useState([])
-
     // const [state, dispatch] = useReducer(reducer, initialState)
 
     const [warning, setWarning] = useState('')
-
-    const handleGetAllOrders = () => {
-        
-    }
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
