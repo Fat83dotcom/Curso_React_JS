@@ -1,4 +1,4 @@
-import { StrictMode, useState } from 'react'
+import { StrictMode, useReducer, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import RegisterCustomer from './Pages/RegisterCustomers/ResgisterCustomer'
@@ -8,6 +8,8 @@ import { SearchCustomerPage } from './Pages/SearchCustmers'
 import { SearchOrdersPage } from './Pages/SearchOrders'
 import { SearchProducts } from './Pages/SearchProducts'
 import { RegisterOrder } from './Pages/OrderPage/RegisterOrder'
+import store from './store'
+import { Provider } from 'react-redux'
 
 export const Home = () => {
     const [homeComponent, setHomeComponent] = useState(<h1>Escolha uma opção!</h1>)
@@ -31,6 +33,8 @@ export const Home = () => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Home/>
+    <Provider store={store}>
+        <Home/>
+    </Provider>
  </StrictMode>,
 )
