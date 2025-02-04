@@ -24,6 +24,7 @@ export const ProductForm = () => {
 
     const inputNameProduct = useRef(null)
     const inputNameCategory = useRef(null)
+    const inputQuantity = useRef(null)
 
     const dispatch = useDispatch()
 
@@ -38,7 +39,7 @@ export const ProductForm = () => {
         setProductCategory(data.data.data)
     }
 
-    const handleRegisterCategoryClick = useCallback(async () => {
+    const handleRegisterCategory = useCallback(async () => {
         if (productCategoryInput) {
             const war = await handleSubmitPost(
                 'http://127.0.0.1:8000/register_product_category/',
@@ -79,7 +80,7 @@ export const ProductForm = () => {
         setProductCategoryInput('')
     }, [setProductInput, productInput])
 
-    const handleRegisterClick = useCallback(async () => {
+    const handleRegisterProduct = useCallback(async () => {
         if (productInput.name && productInput.price && productInput.quantity) {
             const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", productInput)
             if (war.response === 201) {
@@ -99,12 +100,19 @@ export const ProductForm = () => {
         )
     }
 
-    const handlePressEnterProduct = async (e) => {
-        {e.key === 'Enter' && await handleRegisterClick()}
-    }
+    const handlePressEnter = async (e) => {
+        if (e.key === 'Enter') {
+            if (document.activeElement === inputNameCategory.current) {
+                await handleRegisterCategory()
+                console.log('caegoria');
+                
+            }
+            if (document.activeElement === inputQuantity.current) {
+                await handleRegisterProduct()
+                console.log('produto');
+            }
+        }
 
-    const handlePressEnterCategory = async (e) => {
-        {e.key === 'Enter' && await handleRegisterCategoryClick()}
     }
 
     useEffect(() => {
@@ -112,14 +120,15 @@ export const ProductForm = () => {
     }, [])
 
     const clearButton = useMemo(() => <ClearButton click={handleClearProductForm}/>, [handleClearProductForm])
-    const productButton = useMemo(() => <ProductButton click={handleRegisterClick}/>, [handleRegisterClick])
+    const productButton = useMemo(() => <ProductButton click={handleRegisterProduct}/>, [handleRegisterProduct])
     const categoryButton = useMemo(
-        () => <button onClick={handleRegisterCategoryClick} className='style-button'>Cadastrar Categoria</button>, [handleRegisterCategoryClick]
+        () => <button onClick={handleRegisterCategory} className='style-button'>Cadastrar Categoria</button>, [handleRegisterCategory]
     )
+    const warning = useMemo(() => <Warning/>, [])
 
     return (
         <>
-            <Warning/>
+            {warning}
             <div className='container-product-form'>
                 <div className="product-form">
                     <label htmlFor="name">Nome Produto</label>
@@ -138,7 +147,8 @@ export const ProductForm = () => {
                     onChange={handleChangeProduct} type="number" name="price" id="price" />
                     <label htmlFor="quantity">Quantidade</label>
                     <input value={productInput.quantity}
-                        onKeyDown={handlePressEnterProduct}
+                        onKeyDown={handlePressEnter}
+                        ref={inputQuantity}
                         onChange={handleChangeProduct} type="number" name="quantity" id="quantity"
                     />
                     {clearButton}
@@ -149,7 +159,7 @@ export const ProductForm = () => {
                     <input
                         ref={inputNameCategory}
                         onChange={handleChangeProductCategory}
-                        onKeyDown={handlePressEnterCategory}
+                        onKeyDown={handlePressEnter}
                         value={productCategoryInput} type="text" name='category-form' id='category-form'
                     />
                     {categoryButton}
