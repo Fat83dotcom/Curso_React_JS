@@ -8,14 +8,13 @@ export const Warning = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        // dispatch(changeWarning(msg()))
         const timer =  () => {
             new Promise((resolve) => {
                 setTimeout(() => {
                     dispatch(changeWarning('---'))
                     resolve()
                     console.log('debug');
-                }, 3000)
+                }, 5000)
             })
         }
         timer()
