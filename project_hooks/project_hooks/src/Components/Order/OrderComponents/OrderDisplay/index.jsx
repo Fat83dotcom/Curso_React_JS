@@ -1,6 +1,6 @@
 import P from 'prop-types'
 
-export const OrderDisplay = ({orderData, orderSearchData}) => {
+export const OrderDisplay = ({orderData, orderSearchData, handleCloseOrder}) => {
     return (
         <>
             <div className='container-order'>
@@ -30,6 +30,7 @@ export const OrderDisplay = ({orderData, orderSearchData}) => {
                                 })}
                             </tbody>
                         </table>
+                        <button onClick={handleCloseOrder}>Fechar Pedido</button>
                     </div>
                     <div className='center-tables'>
                         <h3>Dados do Cliente</h3>
@@ -92,5 +93,6 @@ OrderDisplay.propTypes = {
     handleFetchOrder: P.func,
     orderData: P.array,
     orderSearchData: P.array,
-    handleChangePage: P.func
+    handleChangePage: P.func,
+    handleCloseOrder: P.func
 }
