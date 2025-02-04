@@ -64,3 +64,29 @@ export const handleSubmitDelete = async (url) => {
         return  {msg: `Erro na requisição: ${error}`}
     }
 }
+
+export const handleSubmitPatch = async (url, body) => {
+    try {
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data, response.status);
+            return {data, response: response.status}
+
+        } else {
+            const data = await response.json();
+            console.error("Erro ao atualizar o item:", {response: response.status});
+            return  {data, response: response.status}
+        }
+    } catch (error) {
+        console.error("Erro na requisição:", error)
+        return  {msg: `Erro na requisição: ${error}`}
+    }
+}
