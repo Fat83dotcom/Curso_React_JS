@@ -1,7 +1,8 @@
 import P from 'prop-types'
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { handleSubmitDelete } from '../../../../Utils/ApiCalls';
-import { Warning } from '../../../Warning';
+import { useDispatch } from 'react-redux';
+import { changeWarning } from '../../../../features/warning/warningSlice';
 
 
 export const OrderListItems = (
@@ -9,28 +10,24 @@ export const OrderListItems = (
 ) => {
 
     const [productList, setProductList] = useState([])
-    const [warning, setWarning] = useState('')
 
-    const handleWarning = useCallback((msg) => {
-        setWarning(msg)
-        setTimeout(() => {setWarning('')}, 3000)
-    }, [setWarning])
+    const dispatch = useDispatch()
 
     const handleDeleteItem = async (index) =>{
-       console.log(productList[index].id_order_items);
-       const id_item = productList[index].id_order_items
-       const id_order = productList[index].id_order
-       const id_product = productList[index].id_product
-       const quantity = productList[index].quantity
-       const url = `http://127.0.0.1:8000/delete_items/${id_item}/${id_order}/${id_product}/${quantity}/`
+        console.log(productList[index].id_order_items);
+        const id_item = productList[index].id_order_items
+        const id_order = productList[index].id_order
+        const id_product = productList[index].id_product
+        const quantity = productList[index].quantity
+        const url = `http://127.0.0.1:8000/delete_items/${id_item}/${id_order}/${id_product}/${quantity}/`
 
-       const result = await handleSubmitDelete(url)
+        const result = await handleSubmitDelete(url)
 
-       reloadListItemsTrrigger(id_order)
-       reloadProductstrigger()
-       reloadOrderTrigger()
-       handleWarning(result.data)
-       console.log(result.data.msg);
+        reloadListItemsTrrigger(id_order)
+        reloadProductstrigger()
+        reloadOrderTrigger()
+
+        dispatch(changeWarning(result.data.msg))
     }
 
     useEffect(() =>{
@@ -41,7 +38,6 @@ export const OrderListItems = (
     return (
         <div className='container-items'>
             <h3>Lista de itens</h3>
-            <Warning warning={warning}/>
             <h5>Clique nos itens para excluir.</h5>
             <div className='center-tables'>
                 <table>
