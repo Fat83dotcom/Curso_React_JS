@@ -1,20 +1,10 @@
 import P from 'prop-types'
-import { Warning } from '../../../Warning'
 import { OrderListItems } from '../OrderListItems'
 import { SelectCategory } from '../../../CategorySelect'
-import { handleSubmitGet, handleSubmitPatch, handleSubmitPost } from '../../../../Utils/ApiCalls'
-import { useState, useCallback, useEffect, useReducer } from 'react'
-
-// const initialState = {
-//     lastFuncProductCall: ''
-// }
-
-// const reducer = (state, action) => {
-//     switch (action.type) {
-//         case "SET_LAST_FUNC":
-//             return {...state, lastFuncProductCall: action.payload}
-//     }
-// }
+import { handleSubmitGet, handleSubmitPost } from '../../../../Utils/ApiCalls'
+import { useState, useCallback, useEffect} from 'react'
+import { useDispatch } from 'react-redux'
+import { changeWarning } from '../../../../features/warning/warningSlice'
 
 export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
@@ -27,60 +17,44 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     const [lastFuncProductCall, setLastFuncProductCall] = useState()
 
-    // const [state, dispatch] = useReducer(reducer, initialState)
-
-    const [warning, setWarning] = useState('')
+    const dispatch = useDispatch()
 
     const productCategoryData = useCallback(async () => {
         const data = await handleSubmitGet('http://127.0.0.1:8000/search_product_category/')
         setProductCategory(data.data.data)
+        return data
     }, [])
 
     const handleFetchProducts = useCallback(async () => {
         const productData = await handleSubmitGet('http://127.0.0.1:8000/get_products/')
 
         setLastFuncProductCall('handleFetchProducts')
-        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleFetchProducts'})
         {productData.data ? setProducts(productData.data.data) : setProducts([])}
 
+        return
     }, [setLastFuncProductCall])
 
-    const handleWarning = useCallback(async (msg) => {
-        setWarning(msg)
-        await new Promise(() => setTimeout(() => {setWarning('')}, 3000))
-    }, [])
-
-    const handleClickSearchProductByCategory = useCallback(async () => {
+    const handleSearchProductByCategory = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_category/?search_category=${categoryId}`
         const categoryData = await handleSubmitGet(url)
 
         setLastFuncProductCall('handleClickSearchProductByCategory')
-        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByCategory'})
 
-        if (categoryData.data.data) {
-            setProducts(categoryData.data.data)
-            handleWarning(categoryData.data.msg)
-        } else {
-            handleWarning(categoryData.data.msg)
-            setProducts([])
-        }
-    }, [categoryId, handleWarning, setLastFuncProductCall])
+        {categoryData.data.data ? setProducts(categoryData.data.data) : setProducts([])}
 
-    const handleClickSearchProductByName =useCallback(async () => {
+        return categoryData
+    }, [categoryId, setLastFuncProductCall])
+
+    const handleSearchProductByName =useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_product_by_name/?search_name=${productName}`
         const productNameData = await handleSubmitGet(url)
 
         setLastFuncProductCall('handleClickSearchProductByName')
-        // dispatch({type: 'SET_LAST_FUNC', payload: 'handleClickSearchProductByName'})
 
-        if (productNameData.data.data) {
-            setProducts(productNameData.data.data)
-            handleWarning(productNameData.data.msg)
-        } else {
-            setProducts([])
-            handleWarning(productNameData.data.msg)
-        }
-    }, [productName, handleWarning, setLastFuncProductCall])
+        {productNameData.data.data ? setProducts(productNameData.data.data) :  setProducts([])}
+
+        return productNameData
+    }, [productName, setLastFuncProductCall])
 
     const getProductsByOrder = useCallback(async (order_id) => {
         const url = `http://127.0.0.1:8000/search_products_by_order/?products_by_order=${order_id}`
@@ -91,26 +65,14 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
 
     const callLastProductFunc = useCallback(async () => {
         {lastFuncProductCall === 'handleFetchProducts' && handleFetchProducts()}
-        {lastFuncProductCall === 'handleClickSearchProductByCategory' && handleClickSearchProductByCategory()}
-        {lastFuncProductCall === 'handleClickSearchProductByName' && handleClickSearchProductByName()}
-        // switch (state.lastFuncProductCall) {
-        //     case 'handleFetchProducts':
-        //         await handleFetchProducts()
-        //         break;
-        //     case 'handleClickSearchProductByCategor':
-        //         await handleClickSearchProductByCategory()
-        //         break;
-        //     case ' handleClickSearchProductByName':
-        //         await  handleClickSearchProductByName()
-        //         break;
-        // }
+        {lastFuncProductCall === 'handleClickSearchProductByCategory' && handleSearchProductByCategory()}
+        {lastFuncProductCall === 'handleClickSearchProductByName' && handleSearchProductByName()}
     }, [
-        handleFetchProducts, handleClickSearchProductByCategory,
-        handleClickSearchProductByName,lastFuncProductCall
+        handleFetchProducts, handleSearchProductByCategory,
+        handleSearchProductByName,lastFuncProductCall
     ])
 
-
-    const handleClickAppendProduct = useCallback(async (e) => {
+    const handleAppendProduct = useCallback(async (e) => {
         if (orderId !== 0) {
             const row = e.currentTarget
 
@@ -133,18 +95,17 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                 quantity: product.quantity
             }
             const saveProductsOnDB = await handleSubmitPost(url, body)
-            handleWarning(saveProductsOnDB.data.msg)
 
             if (saveProductsOnDB.response === 200) {
 
                 await callLastProductFunc() // Recarrega sempre a ultima função de busca de produtos chamada
                 handleFetchOrder() // Recarrega os pedidos no elemento Order
             }
+            return saveProductsOnDB
         } else {
-            handleWarning('Crie um pedido.')
+            dispatch(changeWarning('Crie um pedido.'))
         }
-    }, [handleFetchOrder, handleWarning, orderId, callLastProductFunc])
-
+    }, [handleFetchOrder, orderId, callLastProductFunc, dispatch])
 
     const handleSelectChangeProduct = (e) => {
         const value = e.target.value
@@ -171,11 +132,20 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         handleFetchProducts()
     }, [handleFetchProducts])
 
+    const handleClickSearchProductByCategory =  async () => {
+        const msgData = await handleSearchProductByCategory()
+        {msgData.response !== 200 && dispatch(changeWarning(msgData.data.msg))}
+    }
+
+    const handleClickSearchProductByName =  async () => {
+        const msgData = await handleSearchProductByName()
+        {msgData.response !== 200 && dispatch(changeWarning(msgData.data.msg))}
+    }
+
     return (
         <>
         <div>
             <h3>Adicione Produtos</h3>
-            <Warning warning={warning}/>
             <div className='container-search-products-order'>
                 <div className='search-products-order'>
                     <h5>Buscar por Nome:</h5>
@@ -210,7 +180,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                             <tbody>
                                 {products && products.map((data) => {
                                     return (
-                                        <tr onClick={handleClickAppendProduct} className='click-product' key={data.id}>
+                                        <tr onClick={handleAppendProduct} className='click-product' key={data.id}>
                                             <td><a>{data.id}</a></td>
                                             <td>{data.name}</td>
                                             <td>{data.price}</td>
