@@ -45,15 +45,13 @@ export const ProductForm = () => {
                 'http://127.0.0.1:8000/register_product_category/',
                 {category_name: productCategoryInput}
             )
-            console.log(war.response);
+
+            dispatch(changeWarning(war.data.msg))
 
             if (war.response === 201) {
                 productCategoryData()
                 handleClearCategoryProductForm()
                 inputNameCategory.current.focus()
-                dispatch(changeWarning(war.data.msg))
-            } else {
-                dispatch(changeWarning(war.data.msg))
             }
             // handleWarning(war.data.msg)
         } else{
@@ -77,12 +75,15 @@ export const ProductForm = () => {
             }
         )
         {inputNameProduct.current.focus()}
+
         setProductCategoryInput('')
+
     }, [setProductInput, productInput])
 
     const handleRegisterProduct = useCallback(async () => {
         if (productInput.name && productInput.price && productInput.quantity) {
             const war = await handleSubmitPost("http://127.0.0.1:8000/register_product/", productInput)
+
             if (war.response === 201) {
                 handleClearProductForm()
                 dispatch(changeWarning(war.data.msg))
@@ -102,15 +103,9 @@ export const ProductForm = () => {
 
     const handlePressEnter = async (e) => {
         if (e.key === 'Enter') {
-            if (document.activeElement === inputNameCategory.current) {
-                await handleRegisterCategory()
-                console.log('caegoria');
-                
-            }
-            if (document.activeElement === inputQuantity.current) {
-                await handleRegisterProduct()
-                console.log('produto');
-            }
+            if (document.activeElement === inputNameCategory.current) await handleRegisterCategory()
+
+            if (document.activeElement === inputQuantity.current) await handleRegisterProduct()
         }
 
     }
