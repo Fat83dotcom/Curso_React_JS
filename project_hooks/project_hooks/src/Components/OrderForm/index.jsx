@@ -1,64 +1,58 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import './style.css'
 import { handleSubmitGet } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { Form } from './form'
 import P from 'prop-types'
-
+import { useDispatch } from 'react-redux'
+import { changeWarning } from '../../features/warning/warningSlice'
 
 
 export const OrderForm = ({change, customId}) => {
-    const [warning, setWarning] = useState('')
     const [searchCustomer, setSearchCustomer] = useState('')
+    
     const [customerSearched, setCustomerSearched] = useState([])
+
+    const dispatch = useDispatch()
 
     const handleClearForm = () => {
         setSearchCustomer('')
     }
 
-    const handleSearchClick = async () => {
+    const handleSearchClick = useCallback(async () => {
         if (searchCustomer) {
             const url = `http://127.0.0.1:8000/search_customer/?search_name=${searchCustomer}`
             const data = await handleSubmitGet(url)
-            console.log(data.msg);
-            console.log(data.response);
+
+            dispatch(changeWarning(data.data.msg))
+
             if (data.response === 200){
                 setCustomerSearched(data.data.data)
                 handleClearForm()
-                handleWarning(data.data.msg)
             }
 
-            if (data.response === 404) {
-                setCustomerSearched([])
-                handleWarning(data.data.msg)
-            }
+            if (data.response === 404) setCustomerSearched([])
+
         } else {
-            handleWarning('Campo vazio.')
+            dispatch(changeWarning('Campo vazio.'))
             setCustomerSearched([])
         }
-    }
+    }, [dispatch, searchCustomer])
 
     const handleOrderCustomerId = (e) => {
         const id = e.target.text
         customId(id)
         change('order')
-        // console.log(id)
     }
-
-    const handleWarning = useCallback(async (msg) => {
-        setWarning(msg)
-        await new Promise(() => setTimeout(() => {setWarning('')}, 3000))
-    }, [setWarning])
 
     const handleOnChangeCustomerSearch = (e) => {
         const customer = e.target.value
         setSearchCustomer(customer)
     }
 
-
     return (
         <>
-            <Warning warning={warning}/>
+            <Warning/>
             <Form
                 handleOnChangeCustomerSearch={handleOnChangeCustomerSearch}
                 searchCustomer={searchCustomer}
