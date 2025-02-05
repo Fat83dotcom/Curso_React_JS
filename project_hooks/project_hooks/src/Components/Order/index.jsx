@@ -1,57 +1,56 @@
 import './style.css'
 import P from 'prop-types'
-import { useState, useCallback} from 'react'
+import { useState, useCallback, useMemo} from 'react'
 import { handleSubmitGet, handleSubmitPatch, handleSubmitPost } from '../../Utils/ApiCalls'
 import { Warning } from '../Warning'
 import { OrderDisplay } from './OrderComponents/OrderDisplay'
 import { OrderAppendItems } from './OrderComponents/OrderAppendItems'
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { changeWarning } from '../../features/warning/warningSlice'
 
 export const Order = ({customerId, change}) => {
-    const [warning, setWarning] = useState('')
     const [orderId, setOrderId] = useState(0)
     const [orderData, setOrderData] = useState([])
-    const [orderSearchData, setOrderSearchData] = useState([])
+
     const [allOrders, setAllOrders] = useState([])
+
+    const dispatch = useDispatch()
 
     const handleChangePage = useCallback(() => {
         change('orderForm')
     }, [change])
 
-    const handleWarning = useCallback(async (msg) => {
-        setWarning(msg)
-        await new Promise((resolve) => setTimeout(() => {setWarning(''); resolve()}, 3000))
-    }, [setWarning])
-
     const handleFetchSearchOrder = useCallback(async () => {
         const url = `http://127.0.0.1:8000/search_order/?search_order=${customerId}`
         const data = await handleSubmitGet(url)
-        if (data.response === 200) {
-            return data.data
-        }
+        if (data.response === 200) return data.data
+
         return {}
     }, [customerId])
 
-    const handleFetchOrder = useCallback(async (msgCondition) => {
+    const handleFetchOrder = useCallback(async () => {
         const body = {id_customer: customerId, total: 0}
         const data = await handleSubmitPost(
             'http://127.0.0.1:8000/create_order/',
             body
         )
+        console.log(data.data);
 
-        if (data.response === 200) {
+        if (data.response === 201) {
             const orderData = await handleFetchSearchOrder()
             setOrderData([orderData.data])
             setOrderId(orderData.id)
-            await handleWarning(data.msg)
+
         } else {
-            {msgCondition && handleWarning(data.data.msg)}
             const orderDataUnauthorized = await handleFetchSearchOrder()
             setOrderId(orderDataUnauthorized.data.pk)
             setOrderData([orderDataUnauthorized.data])
-            setOrderSearchData([orderDataUnauthorized.data])
         }
-    }, [handleWarning, setOrderData, customerId, handleFetchSearchOrder, setOrderId])
+
+        return data
+
+    }, [setOrderData, customerId, handleFetchSearchOrder, setOrderId])
 
     const handleGetAllOrders = useCallback(async () => {
         const url = `http://127.0.0.1:8000/all_orders_from_customer/?id_customer=${customerId}`
@@ -59,8 +58,8 @@ export const Order = ({customerId, change}) => {
         const orders = await handleSubmitGet(url)
 
         {orders.response === 200 ? setAllOrders(orders.data.data) : setAllOrders([])}
-        {orders.response === 200 && handleFetchOrder()}
-    }, [customerId, handleFetchOrder])
+
+    }, [customerId])
 
     const handleCloseOrder = useCallback(async () => {
         if (orderId === 0) {
@@ -80,7 +79,7 @@ export const Order = ({customerId, change}) => {
     const handleUpdateOrder = useCallback(async () => {
         const orderUpdate = await handleFetchSearchOrder()
         setOrderData([orderUpdate.data])
-        setOrderSearchData([orderUpdate.data])
+
         await handleGetAllOrders()
     }, [handleFetchSearchOrder, handleGetAllOrders])
 
@@ -93,21 +92,28 @@ export const Order = ({customerId, change}) => {
             await handleGetAllOrders()
         }
         fetch()
-    }, [])
+    }, [handleGetAllOrders])
+
+    const handleCreateOrderButtonClick = async () => {
+        const dataMsg = await handleFetchOrder()
+        console.log(dataMsg.data);
+        console.log('componente order');
+        dispatch(changeWarning(dataMsg.data.msg))
+    }
+
+    const memoWarnig = useMemo(()=> <Warning/>, [])
+    const memoOrderDisplay = useMemo(() => <OrderDisplay
+        orderData={orderData}
+        orderAllData={allOrders}
+        handleCloseOrder={() => handleCloseOrder()}
+    />, [allOrders, orderData, handleCloseOrder])
 
     return (
         <>
-            <Warning warning={warning}/>
-            <button onClick={handleFetchOrder}>Criar Pedido</button>
+            {memoWarnig}
+            <button onClick={handleCreateOrderButtonClick}>Criar Pedido</button>
             <div className='container-order-main'>
-                <OrderDisplay
-                    orderData={orderData}
-                    orderAllData={allOrders}
-                    orderSearchData={orderSearchData}
-                    handleChangePage={handleChangePage}
-                    handleCloseOrder={() => handleCloseOrder()}
-                    handleFetchOrder={() => handleFetchOrder(true)}
-                />
+                {memoOrderDisplay}
                 <OrderAppendItems
                     orderId={orderId}
                     idCustomer={customerId}
