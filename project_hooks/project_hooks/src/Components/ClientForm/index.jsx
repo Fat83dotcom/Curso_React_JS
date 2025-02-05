@@ -12,6 +12,8 @@ export const ClientForm = () => {
 
     const inputCustomerName = useRef(null)
 
+    const dispatch = useDispatch()
+
     const [formData, setFormData] = useState(
         {
             name: '',
@@ -21,8 +23,6 @@ export const ClientForm = () => {
             address: '',
         }
     )
-
-    const dispatch = useDispatch()
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -46,26 +46,26 @@ export const ClientForm = () => {
         if ( formData.name && formData.second_name &&
             formData.email && formData.phone && formData.address) {
             const war = await handleSubmitPost(
-                "http://127.0.0.1:8000/register_customers/", formData
+                "http://127.0.0.1:8000/register_customers/",
+                formData
             )
-            if (war.response === 201) {
-                dispatch(changeWarning(war.data.msg))
-                handleClearForm()
-            } else {
-                dispatch(changeWarning(war.data.msg))
-            }
+
+            dispatch(changeWarning(war.data.msg))
+            if (war.response === 201) handleClearForm()
+
         } else {
             dispatch(changeWarning('Faltam Dados no Formulario'))
             {inputCustomerName.current.focus()}
         }
     }, [formData, handleClearForm, dispatch])
 
-    const handleKeyPress = (e) => {
-        {e.key === 'Enter' && fetchCustomers()}
+    const handleKeyPress = async (e) => {
+        {e.key === 'Enter' && await fetchCustomers()}
     }
 
     const clearButton = useMemo(() => <ClearButton click={handleClearForm}/>, [handleClearForm])
     const submitButton = useMemo(() => <ClientSubmitButton click={fetchCustomers}/>, [fetchCustomers])
+    
     return (
         <>
             <Warning/>
