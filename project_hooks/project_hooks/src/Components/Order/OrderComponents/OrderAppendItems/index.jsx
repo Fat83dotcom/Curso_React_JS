@@ -94,6 +94,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
                 id_product: product.id,
                 quantity: product.quantity
             }
+            console.log(orderId);
+
             const saveProductsOnDB = await handleSubmitPost(url, body)
 
             if (saveProductsOnDB.response === 200) {
@@ -121,6 +123,8 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
         const fetch = async() => {
             await getProductsByOrder(orderId)
         }
+        console.log(orderId);
+        
         fetch()
     }, [triggerItems,getProductsByOrder, orderId])
 
