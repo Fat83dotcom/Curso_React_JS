@@ -40,8 +40,7 @@ export const Order = ({customerId, change}) => {
         if (data.response === 201) {
             const orderData = await handleFetchSearchOrder()
             setOrderData([orderData.data])
-            setOrderId(orderData.id)
-
+            setOrderId(orderData.data.pk)
         } else {
             const orderDataUnauthorized = await handleFetchSearchOrder()
             setOrderId(orderDataUnauthorized.data.pk)
