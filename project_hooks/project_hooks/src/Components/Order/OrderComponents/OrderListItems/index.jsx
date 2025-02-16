@@ -1,17 +1,12 @@
 import P from 'prop-types'
 import { useEffect, useState } from 'react';
 import { handleSubmitDelete } from '../../../../Utils/ApiCalls';
-import { useDispatch } from 'react-redux';
-import { changeWarning } from '../../../../features/warning/warningSlice';
-
 
 export const OrderListItems = (
     {product, reloadListItemsTrrigger, reloadProductstrigger, reloadOrderTrigger}
 ) => {
 
     const [productList, setProductList] = useState([])
-
-    const dispatch = useDispatch()
 
     const handleDeleteItem = async (index) =>{
         console.log(productList[index].id_order_items);
@@ -21,17 +16,15 @@ export const OrderListItems = (
         const quantity = productList[index].quantity
         const url = `http://127.0.0.1:8000/delete_items/${id_item}/${id_order}/${id_product}/${quantity}/`
 
-        const result = await handleSubmitDelete(url)
-
+        await handleSubmitDelete(url)
         reloadListItemsTrrigger(id_order)
         reloadProductstrigger()
         reloadOrderTrigger()
-
-        dispatch(changeWarning(result.data.msg))
     }
 
-    useEffect(() =>{
+    useEffect(() => {
         console.log(product);
+        {!product && setProductList([])}
         {product && setProductList(product)}
     }, [product])
 
