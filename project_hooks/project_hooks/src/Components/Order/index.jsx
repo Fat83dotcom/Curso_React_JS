@@ -82,10 +82,6 @@ export const Order = ({customerId, change}) => {
         await handleGetAllOrders()
     }, [handleFetchSearchOrder, handleGetAllOrders])
 
-    const handleTriggerProductItems = (getitems) => {
-        getitems()
-    }
-
     useEffect(() => {
         const fetch = async () => {
             await handleGetAllOrders()
@@ -117,7 +113,6 @@ export const Order = ({customerId, change}) => {
                     orderId={orderId}
                     idCustomer={customerId}
                     handleFetchOrder={() => handleUpdateOrder()}
-                    triggerItems={(trigger) => handleTriggerProductItems(trigger)}
                 />
             </div>
             <button onClick={handleChangePage}>Voltar à página anterior.</button>
