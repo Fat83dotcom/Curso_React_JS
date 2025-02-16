@@ -3,7 +3,7 @@ import { Button, createTheme } from "@mantine/core";
 
 export const theme = createTheme({
     components: {
-        Button:{
+        Button: Button.extend({
             styles: (theme, props) =>{
                if (props.variant === 'submitButton') {
                     return {
@@ -27,7 +27,7 @@ export const theme = createTheme({
                     root: {}
                 }
             }
-        }
+        })
     },
     // Cores personalizadas
     colors: {
