@@ -10,6 +10,10 @@ import { SearchProducts } from './Pages/SearchProducts'
 import { RegisterOrder } from './Pages/OrderPage/RegisterOrder'
 import store from './store'
 import { Provider } from 'react-redux'
+import '@mantine/core'
+import { MantineProvider } from '@mantine/core'
+import { theme } from './assets/MantineTheme/theme'
+
 
 export const Home = () => {
     const [homeComponent, setHomeComponent] = useState(<h1>Escolha uma opção!</h1>)
@@ -33,8 +37,10 @@ export const Home = () => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
-        <Home/>
-    </Provider>
+    <MantineProvider theme={theme}>
+        <Provider store={store}>
+            <Home/>
+        </Provider>
+    </MantineProvider>
  </StrictMode>,
 )
