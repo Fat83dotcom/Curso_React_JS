@@ -1,9 +1,11 @@
-import './style.css'
+// import './style.css'
 import P from 'prop-types'
+import { Button } from '@mantine/core'
 
 export const ClientSubmitButton = ({click}) => {
     return (
-        <button className='style-button' onClick={click}>Cadastrar Cliente</button>
+        // <button className='style-button'  >Cadastrar Cliente</button>
+        <Button variant='submitButton' onClick={click}>Cadastrar Cliente</Button>
     )
 }
 
