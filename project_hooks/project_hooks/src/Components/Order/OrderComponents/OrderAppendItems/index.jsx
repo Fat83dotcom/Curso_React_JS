@@ -6,6 +6,8 @@ import { useState, useCallback, useEffect} from 'react'
 import { useDispatch } from 'react-redux'
 import { changeWarning } from '../../../../features/warning/warningSlice'
 
+// import classes from ''
+
 export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
     const [products, setProducts] = useState([])
     const [chosenProduct, setChosenProduct] = useState([])
@@ -124,7 +126,7 @@ export const OrderAppendItems = ({orderId, triggerItems, handleFetchOrder}) => {
             await getProductsByOrder(orderId)
         }
         console.log(orderId);
-        
+
         fetch()
     }, [triggerItems,getProductsByOrder, orderId])
 
