@@ -124,41 +124,40 @@ export const ProductForm = () => {
     return (
         <>
             {warning}
-            <div className='container-product-form'>
-                <div className="product-form">
-                    <label htmlFor="name">Nome Produto</label>
-                    <input value={productInput.name}
-                        onChange={handleChangeProduct}
-                        ref={inputNameProduct}
-                        type="text" name="name" id="name"
-                    />
-                    <label htmlFor="category-product">Categoria</label>
-                    <SelectCategory
-                        handleChangeProduct={handleChangeProduct}
-                        productCategory={productCategory}
-                    />
-                    <label htmlFor="price">Valor</label>
-                    <input value={productInput.price}
-                    onChange={handleChangeProduct} type="number" name="price" id="price" />
-                    <label htmlFor="quantity">Quantidade</label>
-                    <input value={productInput.quantity}
-                        onKeyDown={handlePressEnter}
-                        ref={inputQuantity}
-                        onChange={handleChangeProduct} type="number" name="quantity" id="quantity"
-                    />
-                    {clearButton}
-                    {productButton}
-                </div>
-                <div className='category-form'>
-                    <label htmlFor="category">Categoria</label>
-                    <input
-                        ref={inputNameCategory}
-                        onChange={handleChangeProductCategory}
-                        onKeyDown={handlePressEnter}
-                        value={productCategoryInput} type="text" name='category-form' id='category-form'
-                    />
-                    {categoryButton}
-                </div>
+
+            <div className="product-form">
+                <label htmlFor="name">Nome Produto</label>
+                <input value={productInput.name}
+                    onChange={handleChangeProduct}
+                    ref={inputNameProduct}
+                    type="text" name="name" id="name"
+                />
+                <label htmlFor="category-product">Categoria</label>
+                <SelectCategory
+                    handleChangeProduct={handleChangeProduct}
+                    productCategory={productCategory}
+                />
+                <label htmlFor="price">Valor</label>
+                <input value={productInput.price}
+                onChange={handleChangeProduct} type="number" name="price" id="price" />
+                <label htmlFor="quantity">Quantidade</label>
+                <input value={productInput.quantity}
+                    onKeyDown={handlePressEnter}
+                    ref={inputQuantity}
+                    onChange={handleChangeProduct} type="number" name="quantity" id="quantity"
+                />
+                {clearButton}
+                {productButton}
+            </div>
+            <div className='category-form'>
+                <label htmlFor="category">Categoria</label>
+                <input
+                    ref={inputNameCategory}
+                    onChange={handleChangeProductCategory}
+                    onKeyDown={handlePressEnter}
+                    value={productCategoryInput} type="text" name='category-form' id='category-form'
+                />
+                {categoryButton}
             </div>
         </>
     )
